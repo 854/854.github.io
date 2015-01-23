@@ -10,7 +10,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.01";
+autopilot.version = "0.02.02";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -27,7 +27,7 @@ autopilot.letsgo = function(){
 
 autopilot.events = {
     init: function(){
-        API.on(API.DJ_ADVANCE, autopilot.events.newsong);
+        API.on(API.ADVANCE, autopilot.events.newsong);
         API.on(API.CHAT_COMMAND, autopilot.events.newcommand);
         API.on(API.VOTE_UPDATE, autopilot.events.newvote);
         autopilot.you = API.getUser();
