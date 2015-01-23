@@ -17,7 +17,7 @@ autopilot.letsgo = function(){
     var script=document.createElement('script');
     script.id='aptimer';
     script.type='text/javascript';
-    script.src='https://dl.dropboxusercontent.com/u/45661700/countr.js';
+    script.src='https://854.github.io/plugdj/jquery.countdown.min.js';
     document.body.appendChild(script);
     autopilot.events.init();
     autopilot.actions.woot();
