@@ -6,11 +6,12 @@ a less-obvious auto-voting script for plug.dj
 var autopilot = {
     started: false,
     wooting: true,
+    media: null,
     you: null,
     songtimer: null
 };
 
-autopilot.version = "0.02.06";
+autopilot.version = "0.02.07";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -31,6 +32,7 @@ autopilot.events = {
         API.on(API.CHAT_COMMAND, autopilot.events.newcommand);
         API.on(API.VOTE_UPDATE, autopilot.events.newvote);
         autopilot.you = API.getUser();
+        autopilot.media = API.getMedia();
         var media1 = API.getMedia();
         if (media1) document.title = media1.author+" – "+media1.title+" | plug.dj";
     },
@@ -57,13 +59,18 @@ autopilot.events = {
                     autopilot.actions.woot();
                     autopilot.actions.buttontext("Auto");
                 }
-        } else if (cmd == "/idpc"){
+        } else if (cmd == "/id"){
             autopilot.actions.idplays();
+        } else if (cmd = "id2"){
+            autopilot.actions.idplays(true);
+        } else if (cmd == "/link"){
+            autopilot.actions.songlink();
         }
     },
     newsong: function(data){
         if (data.media) {
             document.title = data.media.author+" – "+data.media.title+" | plug.dj";
+            autopilot.media = data.media;
             var length = Math.floor(data.media.duration);
             var socks = Math.floor(Math.random() * (4 - 2 + 1) + 2);
             var thetimer = (length / socks);
@@ -99,8 +106,12 @@ autopilot.actions = {
     buttontext: function(txt){
         $("#woot").find(".label").html( txt );
     },
-    idplays: function(){
-        var queuedTrack = API.getNextMedia();
+    idplays: function(np){
+        if (np){
+            var queuedTrack = autopilot.media;
+        } else {
+            var queuedTrack = API.getNextMedia();
+        }
         var tune = queuedTrack.media;
         var response = tune.title+" has never been played before in ID";
         $.ajax({
@@ -121,6 +132,20 @@ autopilot.actions = {
             }
         });
 
+    },
+    songlink: function(){
+        var data = autopilot.media;
+        if (data.format == 1){
+            autopilot.actions.msg("Song link: https://www.youtube.com/watch?v="+data.cid);
+        } else if (data.format == 2) {
+            $.ajax({
+                dataType: "jsonp",
+                url: "https://api.soundcloud.com/tracks/"+data.cid+".json?client_id=27028829630d95b0f9d362951de3ba2c", 
+                success:  function (response){
+                    autopilot.actions.msg("Song link: "+response.permalink_url);
+                }
+            });
+        }
     },
     msg: function(txt,notice){
         $( "#chat-messages" ).append( "<div class=\"cm message\"><div class=\"badge-box\"><i class=\"bdg bdg-music04\"></i></div><div class=\"msg\"><div class=\"from staff\"><span class=\"un\">AUTOPILOT</span></div><div class=\"text\">"+txt+"</div></div></div>");
