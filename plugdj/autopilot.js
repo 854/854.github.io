@@ -10,7 +10,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.03";
+autopilot.version = "0.02.04";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -102,16 +102,16 @@ autopilot.actions = {
     idplays: function(){
         var queuedTrack = API.getNextMedia();
         var tune = queuedTrack.media;
-        var response = tune.title+" has never been played before in :ID:";
+        var response = tune.title+" has never been played before in ID";
         $.ajax({
             dataType: "jsonp",
             url: "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&track=" + encodeURIComponent(tune.title) + "&artist=" + encodeURIComponent(tune.author) + "&api_key=a4c98e67216cbed9730a129678fda601&username=TT_Discotheque&format=json", 
-            success:  function (response){
+            success:  function (data){
                 try {
-                        if (response.track.userplaycount) {
+                        if (data.track.userplaycount) {
                             var thelabel = "times";
-                            if (response.track.userplaycount == 1) thelabel = "time";
-                            response = tune.title+" has been played " + response.track.userplaycount + " " + thelabel;
+                            if (data.track.userplaycount == 1) thelabel = "time";
+                            response = tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID";
                         }
                 } catch (e) {
                         response = tune.title+" is not on last.fm with those tags";
