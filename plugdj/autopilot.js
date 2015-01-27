@@ -10,14 +10,14 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.02";
+autopilot.version = "0.02.03";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
-    var script=document.createElement('script');
-    script.id='aptimer';
-    script.type='text/javascript';
-    script.src='https://854.github.io/plugdj/jquery.countdown.min.js';
+    var script=document.createElement("script");
+    script.id="aptimer";
+    script.type="text/javascript";
+    script.src="https://854.github.io/plugdj/jquery.countdown.min.js";
     document.body.appendChild(script);
     autopilot.events.init();
     autopilot.actions.woot();
@@ -46,17 +46,19 @@ autopilot.events = {
         if (cmd == "/autopilot"){
                 if (autopilot.wooting){
                     autopilot.wooting = false;
-                    API.chatLog('autopilot off.', false);
+                    API.chatLog("autopilot off.", false);
                     $("#woot").find(".label").countdown("destroy");
                     clearTimeout(autopilot.songtimer);
                     autopilot.songtimer = null;
                     autopilot.actions.buttontext("Woot!");
                 } else {
                     autopilot.wooting = true;
-                    API.chatLog('autopilot activated.', false);
+                    API.chatLog("autopilot activated.", false);
                     autopilot.actions.woot();
                     autopilot.actions.buttontext("Auto");
                 }
+        } else if (cmd == "/idpc"){
+            autopilot.actions.idplays();
         }
     },
     newsong: function(data){
@@ -96,6 +98,29 @@ autopilot.actions = {
     },
     buttontext: function(txt){
         $("#woot").find(".label").html( txt );
+    },
+    idplays: function(){
+        var queuedTrack = API.getNextMedia();
+        var tune = queuedTrack.media;
+        var response = tune.title+" has never been played before in :ID:";
+        $.ajax({
+            dataType: "jsonp",
+            url: "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&track=" + encodeURIComponent(tune.title) + "&artist=" + encodeURIComponent(tune.author) + "&api_key=a4c98e67216cbed9730a129678fda601&username=TT_Discotheque&format=json", 
+            success:  function (response){
+                try {
+                        if (response.track.userplaycount) {
+                            var thelabel = "times";
+                            if (response.track.userplaycount == 1) thelabel = "time";
+                            response = tune.title+" has been played " + response.track.userplaycount + " " + thelabel;
+                        }
+                } catch (e) {
+                        response = tune.title+" is not on last.fm with those tags";
+                }
+            }
+        });
+
+        API.chatLog(response, false);
+
     }
 };
 
@@ -104,7 +129,7 @@ autopilot.cleanUp = function(){
     API.off(API.CHAT_COMMAND, autopilot.events.newcommand);
     API.off(API.VOTE_UPDATE, autopilot.events.newvote);
     autopilot.wooting = false;
-    API.chatLog('autopilot killed.', false);
+    API.chatLog("autopilot killed.", false);
     $("#woot").find(".label").countdown("destroy");
     clearTimeout(autopilot.songtimer);
     autopilot.songtimer = null;
