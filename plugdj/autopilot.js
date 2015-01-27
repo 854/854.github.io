@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.09";
+autopilot.version = "0.02.10";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -137,13 +137,13 @@ autopilot.actions = {
     songlink: function(){
         var data = autopilot.media;
         if (data.format == 1){
-            autopilot.actions.msg("Song link: https://www.youtube.com/watch?v="+data.cid);
+            autopilot.actions.msg("Song link: <a href=\"https://www.youtube.com/watch?v="+data.cid+"\" target=\"blank\">youtube</a>");
         } else if (data.format == 2) {
             $.ajax({
                 dataType: "jsonp",
                 url: "https://api.soundcloud.com/tracks/"+data.cid+".json?client_id=27028829630d95b0f9d362951de3ba2c", 
                 success:  function (response){
-                    autopilot.actions.msg("Song link: "+response.permalink_url);
+                    autopilot.actions.msg("Song link: <a href=\""+response.permalink_url+"\" target=\"_blank\">soundcloud</a>");
                 }
             });
         }
