@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.08";
+autopilot.version = "0.02.09";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -109,10 +109,11 @@ autopilot.actions = {
     idplays: function(wowo){
         if (wowo){
             var queuedTrack = autopilot.media;
+            var tune = queuedTrack;
         } else {
             var queuedTrack = API.getNextMedia();
+            var tune = queuedTrack.media;
         }
-        var tune = queuedTrack.media;
         var response = tune.title+" has never been played before in ID";
         $.ajax({
             dataType: "jsonp",
