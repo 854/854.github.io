@@ -4,13 +4,13 @@ a less-obvious auto-voting script for plug.dj
 ---------------------------------------------*/
 
 var autopilot = {
-     started: false,
+    started: false,
     wooting: true,
     you: null,
     songtimer: null
 };
 
-autopilot.version = "0.02.05";
+autopilot.version = "0.02.06";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -22,7 +22,7 @@ autopilot.letsgo = function(){
     autopilot.events.init();
     autopilot.actions.woot();
     autopilot.actions.buttontext("Auto");
-    API.chatLog("autopilot (" + autopilot.version + ") is a go.", false);
+    autopilot.actions.msg("autopilot (" + autopilot.version + ") is a go.", false);
 };
 
 autopilot.events = {
@@ -46,14 +46,14 @@ autopilot.events = {
         if (cmd == "/autopilot"){
                 if (autopilot.wooting){
                     autopilot.wooting = false;
-                    API.chatLog("autopilot off.", false);
+                    autopilot.actions.msg("autopilot off.", false);
                     $("#woot").find(".label").countdown("destroy");
                     clearTimeout(autopilot.songtimer);
                     autopilot.songtimer = null;
                     autopilot.actions.buttontext("Woot!");
                 } else {
                     autopilot.wooting = true;
-                    API.chatLog("autopilot activated.", false);
+                    autopilot.actions.msg("autopilot activated.", false);
                     autopilot.actions.woot();
                     autopilot.actions.buttontext("Auto");
                 }
@@ -111,16 +111,19 @@ autopilot.actions = {
                         if (data.track.userplaycount) {
                             var thelabel = "times";
                             if (data.track.userplaycount == 1) thelabel = "time";
-                            API.chatLog(tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID", false);
+                            autopilot.actions.msg(tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID", false);
                         } else {
-                            API.chatLog(tune.title+" has never been played in ID", false);
+                            autopilot.actions.msg(tune.title+" has never been played in ID", false);
                         }
                 } catch (e) {    
-                    API.chatLog(tune.title+" is not on last.fm with those tags", false);
+                    autopilot.actions.msg(tune.title+" is not on last.fm with those tags", false);
                 }
             }
         });
 
+    },
+    msg: function(txt,notice){
+        $( "#chat-messages" ).append( "<div class=\"cm message\"><div class=\"badge-box\"><i class=\"bdg bdg-music04\"></i></div><div class=\"msg\"><div class=\"from staff\"><span class=\"un\">AUTOPILOT</span></div><div class=\"text\">"+txt+"</div></div></div>");
     }
 };
 
@@ -129,7 +132,7 @@ autopilot.cleanUp = function(){
     API.off(API.CHAT_COMMAND, autopilot.events.newcommand);
     API.off(API.VOTE_UPDATE, autopilot.events.newvote);
     autopilot.wooting = false;
-    API.chatLog("autopilot killed.", false);
+    autopilot.actions.msg("autopilot killed.", false);
     $("#woot").find(".label").countdown("destroy");
     clearTimeout(autopilot.songtimer);
     autopilot.songtimer = null;
