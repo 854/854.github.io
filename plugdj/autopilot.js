@@ -10,7 +10,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.04";
+autopilot.version = "0.02.05";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -111,15 +111,15 @@ autopilot.actions = {
                         if (data.track.userplaycount) {
                             var thelabel = "times";
                             if (data.track.userplaycount == 1) thelabel = "time";
-                            response = tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID";
+                            API.chatLog(tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID", false);
+                        } else {
+                            API.chatLog(tune.title+" has never been played in ID", false);
                         }
-                } catch (e) {
-                        response = tune.title+" is not on last.fm with those tags";
+                } catch (e) {    
+                    API.chatLog(tune.title+" is not on last.fm with those tags", false);
                 }
             }
         });
-
-        API.chatLog(response, false);
 
     }
 };
