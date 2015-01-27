@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.10";
+autopilot.version = "0.02.11";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -150,6 +150,9 @@ autopilot.actions = {
     },
     msg: function(txt,notice){
         $( "#chat-messages" ).append( "<div class=\"cm message\"><div class=\"badge-box\"><i class=\"bdg bdg-music04\"></i></div><div class=\"msg\"><div class=\"from staff\"><span class=\"un\">AUTOPILOT</span></div><div class=\"text\">"+txt+"</div></div></div>");
+        var wtf = $('#chat-messages');
+        var height = wtf[0].scrollHeight;
+        wtf.scrollTop(height);
     }
 };
 
