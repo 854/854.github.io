@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.07";
+autopilot.version = "0.02.08";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -61,7 +61,7 @@ autopilot.events = {
                 }
         } else if (cmd == "/id"){
             autopilot.actions.idplays();
-        } else if (cmd = "id2"){
+        } else if (cmd == "/id2"){
             autopilot.actions.idplays(true);
         } else if (cmd == "/link"){
             autopilot.actions.songlink();
@@ -106,8 +106,8 @@ autopilot.actions = {
     buttontext: function(txt){
         $("#woot").find(".label").html( txt );
     },
-    idplays: function(np){
-        if (np){
+    idplays: function(wowo){
+        if (wowo){
             var queuedTrack = autopilot.media;
         } else {
             var queuedTrack = API.getNextMedia();
