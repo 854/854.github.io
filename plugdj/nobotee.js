@@ -47,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.5";
+nobotee.version = "0.05.6";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -580,12 +580,14 @@ nobotee.api = {
 					if (fair_game){
 						nobotee.people[data.dj.id] = 1;
 					} else {
+						var old_dj = 0;
 						nobotee.people[data.dj.id] = 0;
 					}
 				} else {
 					if (fair_game){
 						nobotee.people[data.dj.id] = nobotee.people[data.dj.id] + 1;
 					} else {
+						var old_dj = nobotee.people[data.dj.id];
 						nobotee.people[data.dj.id] = 0;
 					}
 				}
@@ -593,11 +595,12 @@ nobotee.api = {
 				if (fair_game){
 					nobotee.streak++;
 				} else {
+					var old_streak = nobotee.streak;
 					nobotee.streak = 0;
 				}
 				nobotee.storage.save();
 
-				nobotee.talk("room streak:"+nobotee.streak+" | dj streak:"+nobotee.people[data.dj.id]);
+				if (!fair_game) nobotee.talk("room streak was :"+old_streak+" | dj streak was:"+old_dj);
 			}
 		}
 	},
