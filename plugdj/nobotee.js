@@ -15,6 +15,7 @@ if (typeof(nobotee) == "undefined") {
 		commands: {},
 		escortme:{},
 		people:{},
+		streak: 0,
 		entered: null,
 		reloadURL: "https://854.github.io/plugdj/nobotee.js",
 		lastSeen: {},
@@ -46,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.2";
+nobotee.version = "0.05.3";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -332,45 +333,6 @@ nobotee.api = {
 				nobotee.talk(nobotee.commands[command]);
 			} else if (command == "help"){
 				nobotee.talk("help");
-			} else if (command == "stats"){
-				if (args){
-					var dudebro = nobotee.getid(args);
-					if (dudebro){
-						if (nobotee.people[dudebro]){
-							var average = nobotee.people[dudebro].t / nobotee.people[dudebro].p;
-
-         					 var hours = Math.floor(average / (60 * 60));
-
-        					 var divisor_for_minutes = average % (60 * 60);
-        					 var minutes = Math.floor(divisor_for_minutes / 60);
-
-         					var divisor_for_seconds = divisor_for_minutes % 60;
-         					var seconds = Math.ceil(divisor_for_seconds);
-         					var response = "(stats for "+ args+") average:"+minutes+"m "+seconds+"s | plays:"+nobotee.people[dudebro].p+" | bonuses:"+nobotee.people[dudebro].b+" | strikes:"+nobotee.people[dudebro].n;
-							nobotee.talk(response);
-						} else {
-							nobotee.talk(nobotee.atmessage(name)+" no stats on file for "+args+" yet");
-						}
-					} else {
-						nobotee.talk(nobotee.atmessage(name)+" nobody by that name here !~");
-					}
-				} else {
-					if (nobotee.people[id]){
-						var average = nobotee.people[id].t / nobotee.people[id].p;
-
-         				 var hours = Math.floor(average / (60 * 60));
-
-        				 var divisor_for_minutes = average % (60 * 60);
-        				 var minutes = Math.floor(divisor_for_minutes / 60);
-
-         				var divisor_for_seconds = divisor_for_minutes % 60;
-         				var seconds = Math.ceil(divisor_for_seconds);
-         				var response = "(stats for "+ name+") average:"+minutes+"m "+seconds+"s | plays:"+nobotee.people[id].p+" | bonuses:"+nobotee.people[id].b+" | strikes:"+nobotee.people[id].n;
-						nobotee.talk(response);
-					} else {
-						nobotee.talk(nobotee.atmessage(name)+" no stats on file for you yet");
-					}
-				}	
 			} else if (command == "points"){
 				if (args){
 					var response = nobotee.api.pointslook(args);
@@ -485,7 +447,12 @@ nobotee.api = {
 						nobotee.talk("the theme has been set to "+args);
 						nobotee.storage.save();
 					}
-				}  else if (command == "noimg"){
+				} else if (command == "resetstreaks"){
+					nobotee.people = {};
+					nobotee.streak = {};
+					nobotee.talk("user streaks and room streaks reset");
+					nobotee.storage.save();
+				} else if (command == "noimg"){
 					if (args){
 						var theid = nobotee.getid(args);
 						if (theid){
@@ -562,6 +529,8 @@ nobotee.api = {
 				nobotee.api.woot();
 			}
 
+			var fair_game = true;
+
 			if (prevdj){
 				if (nobotee.escortme[prevdj.id]){
 					if (nobotee.escortme[prevdj.id].plays >= nobotee.escortme[prevdj.id].goal){
@@ -580,29 +549,16 @@ nobotee.api = {
 				nobotee.talk("/me :cd: "+nobotee.dj.username+" started playing '"+nobotee.media.title+"' by "+nobotee.media.author);
 				}
 
-			if (nobotee.people[nobotee.dj.id]){
-				nobotee.people[nobotee.dj.id].p++;
-				nobotee.people[nobotee.dj.id].t = nobotee.people[nobotee.dj.id].t + data.media.duration;
-			} else {
-				nobotee.people[nobotee.dj.id] = {
-						p: 1,
-						t: data.media.duration,
-						b: 0,
-						n: 0
-				};
-			}
-		
-			nobotee.storage.save();
+
 			if (nobotee.defaults.mode == "song_length") nobotee.scr.song_length();
 			if (nobotee.defaults.time_lmt){
 				var length = data.media.duration;
 				var dj = data.dj.username;
 				var song = data.media.title;
 				if (length > 320) {
-					nobotee.people[nobotee.dj.id].n++;
-					nobotee.storage.save();
 				 	nobotee.talk(nobotee.atmessage(dj)+", your song is wayy too long. Please skip.");
 				 	nobotee.skiptime = true;
+				 	fair_game = false;
 				 	setTimeout(function () {
      					if (nobotee.skiptime == true) {
       						 API.moderateForceSkip();
@@ -610,18 +566,38 @@ nobotee.api = {
     					 }
    					}, 5000);
 				} else if ((length > 183) && (length <= 320)) {
-					nobotee.people[nobotee.dj.id].n++;
-					nobotee.storage.save();
 					nobotee.talk(nobotee.atmessage(dj)+", TOO LONG!");
+					fair_game = false;
 				} else if ((length > 120) && (length <= 183)) {
 					//
 				} else if ((length > 60) && (length <= 120)) {
 				   //
 				} else if (length <= 60) {
 					nobotee.talk(nobotee.atmessage(dj)+", BONUS :sparkles:");
-					nobotee.people[nobotee.dj.id].b++;
-					nobotee.storage.save();
 				}
+
+				if (nobotee.people[data.dj.id]){
+					if (fair_game){
+						nobotee.people[data.dj.id] = 1;
+					} else {
+						nobotee.people[data.dj.id] = 0;
+					}
+				} else {
+					if (fair_game){
+						nobotee.people[data.dj.id] = nobotee.people[data.dj.id] + 1;
+					} else {
+						nobotee.people[data.dj.id] = 0;
+					}
+				}
+
+				if (fair_game){
+					nobotee.streak++;
+				} else {
+					nobotee.streak = 0;
+				}
+				nobotee.storage.save();
+
+				nobotee.talk("room streak:"+nobotee.streak+" | dj streak:"+nobotee.people[data.dj.id]);
 			}
 		}
 	},
@@ -972,6 +948,7 @@ nobotee.storage = {
 			imgblacklist: nobotee.imgblacklist,
 			theme: nobotee.theme,
 			users: nobotee.people,
+			streak: nobotee.streak,
 			advanced_settings: nobotee.advanced_settings
 		};
 		var preferences = JSON.stringify(save_file);
@@ -986,7 +963,16 @@ nobotee.storage = {
  		 nobotee.defaults = preferences.defaults;
  		 nobotee.theme = preferences.theme;
  		 if (preferences.imgblacklist) nobotee.imgblacklist = preferences.imgblacklist;
- 		 if (preferences.users) nobotee.people = preferences.users;
+ 		 if (preferences.users){
+ 		 	nobotee.people = preferences.users;
+ 		 } else {
+ 		 	nobotee.people = {};
+ 		 }
+ 		 if (preferences.streak){
+ 		 	nobotee.streak = preferences.streak;
+ 		 } else {
+ 		 	nobotee.streak = 0;
+ 		 }
  		 if (preferences.advanced_settings) nobotee.advanced_settings = preferences.advanced_settings;
 	}
 };
