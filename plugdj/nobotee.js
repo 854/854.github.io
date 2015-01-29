@@ -47,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.4";
+nobotee.version = "0.05.5";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -449,7 +449,7 @@ nobotee.api = {
 					}
 				} else if (command == "resetstreaks"){
 					nobotee.people = {};
-					nobotee.streak = {};
+					nobotee.streak = 0;
 					nobotee.talk("user streaks and room streaks reset");
 					nobotee.storage.save();
 				} else if (command == "noimg"){
