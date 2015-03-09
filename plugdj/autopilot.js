@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.11";
+autopilot.version = "0.02.12";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -59,10 +59,6 @@ autopilot.events = {
                     autopilot.actions.woot();
                     autopilot.actions.buttontext("Auto");
                 }
-        } else if (cmd == "/id"){
-            autopilot.actions.idplays();
-        } else if (cmd == "/id2"){
-            autopilot.actions.idplays(true);
         } else if (cmd == "/link"){
             autopilot.actions.songlink();
         }
@@ -105,34 +101,6 @@ autopilot.actions = {
     },
     buttontext: function(txt){
         $("#woot").find(".label").html( txt );
-    },
-    idplays: function(wowo){
-        if (wowo){
-            var queuedTrack = autopilot.media;
-            var tune = queuedTrack;
-        } else {
-            var queuedTrack = API.getNextMedia();
-            var tune = queuedTrack.media;
-        }
-        var response = tune.title+" has never been played before in ID";
-        $.ajax({
-            dataType: "jsonp",
-            url: "https://ws.audioscrobbler.com/2.0/?method=track.getInfo&track=" + encodeURIComponent(tune.title) + "&artist=" + encodeURIComponent(tune.author) + "&api_key=a4c98e67216cbed9730a129678fda601&username=TT_Discotheque&format=json", 
-            success:  function (data){
-                try {
-                        if (data.track.userplaycount) {
-                            var thelabel = "times";
-                            if (data.track.userplaycount == 1) thelabel = "time";
-                            autopilot.actions.msg(tune.title+" has been played " + data.track.userplaycount + " " + thelabel+" in ID", false);
-                        } else {
-                            autopilot.actions.msg(tune.title+" has never been played in ID", false);
-                        }
-                } catch (e) {    
-                    autopilot.actions.msg(tune.title+" is not on last.fm with those tags", false);
-                }
-            }
-        });
-
     },
     songlink: function(){
         var data = autopilot.media;
