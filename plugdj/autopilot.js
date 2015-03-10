@@ -33,7 +33,7 @@ autopilot.events = {
         API.on(API.VOTE_UPDATE, autopilot.events.newvote);
         autopilot.you = API.getUser();
         var media1 = API.getMedia();
-        autopilot.media = media1();
+        autopilot.media = media1;
         if (media1) document.title = media1.author+" – "+media1.title+" | plug.dj";
     },
     newvote: function(obj){
