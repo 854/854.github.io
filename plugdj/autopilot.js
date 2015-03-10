@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.13";
+autopilot.version = "0.02.14";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -31,10 +31,9 @@ autopilot.events = {
         API.on(API.ADVANCE, autopilot.events.newsong);
         API.on(API.CHAT_COMMAND, autopilot.events.newcommand);
         API.on(API.VOTE_UPDATE, autopilot.events.newvote);
-        API.on(API.USER_JOIN, autopilot.events.newguy);
         autopilot.you = API.getUser();
-        autopilot.media = API.getMedia();
         var media1 = API.getMedia();
+        autopilot.media = media1();
         if (media1) document.title = media1.author+" – "+media1.title+" | plug.dj";
     },
     newvote: function(obj){
@@ -64,12 +63,9 @@ autopilot.events = {
             autopilot.actions.songlink();
         }
     },
-    newguy: function(data){
-        if (!autopilot.you.username) autopilot.you = API.getUser();
-        if (data.username == autopilot.you.username) console.log("you joined a room");
-    },
     newsong: function(data){
         if (data.media) {
+            if (!autopilot.you.username) autopilot.you = API.getUser();
             document.title = data.media.author+" – "+data.media.title+" | plug.dj";
             autopilot.media = data.media;
             var length = Math.floor(data.media.duration);
