@@ -11,7 +11,7 @@ var autopilot = {
     songtimer: null
 };
 
-autopilot.version = "0.02.12";
+autopilot.version = "0.02.13";
 
 autopilot.letsgo = function(){
     autopilot.started = true;
@@ -31,6 +31,7 @@ autopilot.events = {
         API.on(API.ADVANCE, autopilot.events.newsong);
         API.on(API.CHAT_COMMAND, autopilot.events.newcommand);
         API.on(API.VOTE_UPDATE, autopilot.events.newvote);
+        API.on(API.USER_JOIN, autopilot.events.newguy);
         autopilot.you = API.getUser();
         autopilot.media = API.getMedia();
         var media1 = API.getMedia();
@@ -62,6 +63,10 @@ autopilot.events = {
         } else if (cmd == "/link"){
             autopilot.actions.songlink();
         }
+    },
+    newguy: function(data){
+        if (!autopilot.you.username) autopilot.you = API.getUser();
+        if (data.username == autopilot.you.username) console.log("you joined a room");
     },
     newsong: function(data){
         if (data.media) {
@@ -103,6 +108,7 @@ autopilot.actions = {
         $("#woot").find(".label").html( txt );
     },
     songlink: function(){
+        if (!autopilot.media) autopilot.media = API.getMedia();
         var data = autopilot.media;
         if (data.format == 1){
             autopilot.actions.msg("Song link: <a href=\"https://www.youtube.com/watch?v="+data.cid+"\" target=\"blank\">youtube</a>");
