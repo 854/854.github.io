@@ -47,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.7";
+nobotee.version = "0.05.8";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -335,7 +335,7 @@ nobotee.api = {
 				nobotee.talk("help");
 			} else if (command == "streak"){
 				var response = "room streak is "+nobotee.streak;
-				if (nobotee.users[id]) response += " | personal streak is "+nobotee.users[id];
+				if (nobotee.people[id]) response += " | personal streak is "+nobotee.people[id];
 				nobotee.talk(response);
 			} else if (command == "theme"){
 				if (nobotee.theme){
