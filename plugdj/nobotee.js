@@ -47,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.6";
+nobotee.version = "0.05.7";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -212,7 +212,7 @@ nobotee.scr ={
 	gen_list: function(){
 		//TODO: automate this
 		var gdoc_commands = nobotee.api.listcommands();
-		var the_list = "public commands<br/>------<br/>*help<br/>*img [something]<br/>*limit<br/>*theme<br/>*removemeafter [#]</br>*idle [username]<br/>*lastchatted [username]<br/>*points [username]<br/>*joindates<br/>*suggest [topic idea]<br/>*songlink<br/>"+gdoc_commands+"------------<br/>bouncer+ commands<br/>------<br/>*togglelimit<br/>*toggleautovote<br/>*settheme<br/>*notheme<br/>*gdoc";
+		var the_list = "public commands<br/>------<br/>*help<br/>*img [something]<br/>*limit<br/>*theme<br/>*removemeafter [#]</br>*idle [username]<br/>*lastchatted [username]<br/>*streak<br/>*joindates<br/>*suggest [topic idea]<br/>*songlink<br/>"+gdoc_commands+"------------<br/>bouncer+ commands<br/>------<br/>*togglelimit<br/>*toggleautovote<br/>*settheme<br/>*notheme<br/>*gdoc";
 		$( "#nbscr" ).html("<li class='nb_nt'>"+the_list+"</li>");
 	},
 	song_length: function(){
@@ -333,12 +333,9 @@ nobotee.api = {
 				nobotee.talk(nobotee.commands[command]);
 			} else if (command == "help"){
 				nobotee.talk("help");
-			} else if (command == "points"){
-				if (args){
-					var response = nobotee.api.pointslook(args);
-				} else {
-					var response = nobotee.api.pointslook(name);
-				}
+			} else if (command == "streak"){
+				var response = "room streak is "+nobotee.streak;
+				if (nobotee.users[id]) response += " | personal streak is "+nobotee.users[id];
 				nobotee.talk(response);
 			} else if (command == "theme"){
 				if (nobotee.theme){
@@ -575,27 +572,27 @@ nobotee.api = {
 				} else if (length <= 60) {
 					nobotee.talk(nobotee.atmessage(dj)+", BONUS :sparkles:");
 				}
-
+				var old_dj = 0;
 				if (!nobotee.people[data.dj.id]){
 					if (fair_game){
 						nobotee.people[data.dj.id] = 1;
 					} else {
-						var old_dj = 0;
+						old_dj = 0;
 						nobotee.people[data.dj.id] = 0;
 					}
 				} else {
 					if (fair_game){
 						nobotee.people[data.dj.id] = nobotee.people[data.dj.id] + 1;
 					} else {
-						var old_dj = nobotee.people[data.dj.id];
+						old_dj = nobotee.people[data.dj.id];
 						nobotee.people[data.dj.id] = 0;
 					}
 				}
-
+				var old_streak = null;
 				if (fair_game){
 					nobotee.streak++;
 				} else {
-					var old_streak = nobotee.streak;
+					old_streak = nobotee.streak;
 					nobotee.streak = 0;
 				}
 				nobotee.storage.save();
@@ -716,19 +713,6 @@ nobotee.api = {
 		}
 		if (id == nobotee.dj.id) isdjing = true;
 		return isdjing;
-	},
-	pointslook: function(username){
-		var usr = nobotee.getobj(username);
-		if (usr){
-			var total_points = usr.listenerPoints + usr.curatorPoints + usr.djPoints;
-			var dj_per = Math.round((usr.djPoints / total_points) * 100);
-			var lis_per = Math.round((usr.listenerPoints / total_points) * 100);
-			var cur_per = Math.round((usr.curatorPoints / total_points) * 100);
-			var str = username+": "+dj_per+"% from djing, "+lis_per+"% from voting, and "+cur_per+"% from snags";
-		} else {
-			var str = "that user does not appear to be here";
-		}	
-		return str;
 	},
 	listcommands: function(hats){
 		var obj = nobotee.commands;
