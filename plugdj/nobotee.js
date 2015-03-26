@@ -12,6 +12,7 @@ if (typeof(nobotee) == "undefined") {
 		media: null,
 		dj: null,
 		imgblacklist: {},
+		botact: null,
 		commands: {},
 		escortme:{},
 		people:{},
@@ -47,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.9";
+nobotee.version = "0.06.0";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -306,6 +307,8 @@ nobotee.api = {
 	populate_media: function(){
 		var media1 = API.getMedia();
 		var dj1 = API.getDJ();
+		var thebot = API.getUser();
+		nobotee.botact = thebot;
 		nobotee.media = media1;
 		nobotee.dj = dj1;
 	},
@@ -329,7 +332,7 @@ nobotee.api = {
 		if (matches && nobotee.defaults.cmmds) {
 			var command = matches[1];
 			var args = matches[2];
-			if ((nobotee.commands[command]) && (command !== "gdoc")){
+			if ((nobotee.commands[command]) && (command !== "gdoc") && (id !== nobotee.botact.id)){
 				nobotee.talk(nobotee.commands[command]);
 			} else if (command == "help"){
 				nobotee.talk("help");
@@ -574,7 +577,7 @@ nobotee.api = {
 				}
 				var old_dj = 0;
 				var old_streak = 0;
-				
+
 				if (!nobotee.people[data.dj.id]){
 					if (fair_game){
 						nobotee.people[data.dj.id] = 1;
