@@ -47,7 +47,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.05.8";
+nobotee.version = "0.05.9";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -573,6 +573,8 @@ nobotee.api = {
 					nobotee.talk(nobotee.atmessage(dj)+", BONUS :sparkles:");
 				}
 				var old_dj = 0;
+				var old_streak = 0;
+				
 				if (!nobotee.people[data.dj.id]){
 					if (fair_game){
 						nobotee.people[data.dj.id] = 1;
@@ -588,16 +590,17 @@ nobotee.api = {
 						nobotee.people[data.dj.id] = 0;
 					}
 				}
-				var old_streak = null;
+
 				if (fair_game){
 					nobotee.streak++;
 				} else {
 					old_streak = nobotee.streak;
 					nobotee.streak = 0;
+					nobotee.api.display_streak(old_streak,old_dj);
 				}
+
 				nobotee.storage.save();
 
-				if (!fair_game) nobotee.talk("room streak was :"+old_streak+" | dj streak was:"+old_dj);
 			}
 		}
 	},
@@ -683,6 +686,11 @@ nobotee.api = {
     		trucks += ":fire_engine: ";
 		}
 		nobotee.talk(trucks);
+	},
+	display_streak: function(room,user){
+		setTimeout(function() {
+			nobotee.talk("room streak was :"+room+" | dj streak was:"+user);
+		}, 2 * 1000);
 	},
 	oldest_account: function(){
 		var users = API.getUsers();
