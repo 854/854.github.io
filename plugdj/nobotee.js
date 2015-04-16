@@ -78,7 +78,7 @@ nobotee.ui = {
 		 }
 	},
 	build: function(){
-		$( "body" ).prepend("<link id='nbtstyles' rel='stylesheet' href='http://854.github.io/plugdj/nbtstyles.css' type='text/css'><div id='nobotee'></div>");
+		$( "body" ).prepend("<link id='nbtstyles' rel='stylesheet' href='https://854.github.io/plugdj/nbtstyles.css' type='text/css'><div id='nobotee'></div>");
 		$( "#nobotee" ).append("<div id='nb_contents'><h2>nobotee "+nobotee.version+"</h2></div>");
 		$( "#nb_contents" ).append("<div id='nb_screen'><ul class='nbscr' id='nbscr'></ul></div>");
 
