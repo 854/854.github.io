@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.0";
+nobotee.version = "0.06.1";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -213,7 +213,7 @@ nobotee.scr ={
 	gen_list: function(){
 		//TODO: automate this
 		var gdoc_commands = nobotee.api.listcommands();
-		var the_list = "public commands<br/>------<br/>*help<br/>*img [something]<br/>*limit<br/>*theme<br/>*removemeafter [#]</br>*idle [username]<br/>*lastchatted [username]<br/>*streak<br/>*joindates<br/>*suggest [topic idea]<br/>*songlink<br/>"+gdoc_commands+"------------<br/>bouncer+ commands<br/>------<br/>*togglelimit<br/>*toggleautovote<br/>*settheme<br/>*notheme<br/>*gdoc";
+		var the_list = "public commands<br/>------<br/>*help<br/>*img [something]<br/>*limit<br/>*theme<br/>*removemeafter [#]</br>*idle [username]<br/>*lastchatted [username]<br/>*streak<br/>*suggest [topic idea]<br/>*songlink<br/>"+gdoc_commands+"------------<br/>bouncer+ commands<br/>------<br/>*togglelimit<br/>*toggleautovote<br/>*settheme<br/>*notheme<br/>*gdoc";
 		$( "#nbscr" ).html("<li class='nb_nt'>"+the_list+"</li>");
 	},
 	song_length: function(){
@@ -338,7 +338,7 @@ nobotee.api = {
 				nobotee.talk("help");
 			} else if (command == "streak"){
 				var response = "room streak is "+nobotee.streak;
-				if (nobotee.people[id]) response += " | personal streak is "+nobotee.people[id];
+				if (nobotee.people[id]) response += " | "+name+" streak is "+nobotee.people[id];
 				nobotee.talk(response);
 			} else if (command == "theme"){
 				if (nobotee.theme){
@@ -390,9 +390,6 @@ nobotee.api = {
 				} else {
 					nobotee.talk(nobotee.atmessage(name)+" I didn't plan on it");
 				}
-			} else if (command == "joindates"){
-				var oldest = nobotee.api.oldest_account();
-				nobotee.talk(oldest.guy.username+" is the oldest with a joindate of "+oldest.date);
 			} else if (command == "idle"){
 				if (args){
 					nobotee.timer.idleCheck(args);
@@ -694,26 +691,6 @@ nobotee.api = {
 		setTimeout(function() {
 			nobotee.talk("room streak was :"+room+" | dj streak was:"+user);
 		}, 2 * 1000);
-	},
-	oldest_account: function(){
-		var users = API.getUsers();
-		var oldest_guy = users[0];
-		var oldest_time = Date.parse(oldest_guy.joined);
-		var i;
-		for (i = 0; i < users.length; i++) {
-			var thetime = Date.parse(users[i].joined);
-    		if (thetime < oldest_time){
-    			oldest_time = thetime;
-    			oldest_guy = users[i];
-    		}
-		}
-		var d = new Date(oldest_guy.joined);
-		var formatted_joindate = nobotee.formatdate(d, true);
-		var obj = {
-			guy: oldest_guy,
-			date: formatted_joindate
-		};
-		return obj;
 	},
 	isdjing: function(id){
 		var thewaitlist = API.getWaitList();
