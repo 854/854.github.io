@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.2";
+nobotee.version = "0.06.3";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -836,7 +836,10 @@ nobotee.secondsToTime = function(secs) {
 	var minutes = Math.floor(divisor_for_minutes / 60);
 	var divisor_for_seconds = divisor_for_minutes % 60;
 	var seconds = Math.ceil(divisor_for_seconds);
-	return minutes + "m " + seconds+"secs";
+	var response = "";
+	if (hours > 0) response += hours+"h ";
+	response += minutes + "m " + seconds+"secs"
+	return response;
 };
 
 nobotee.formatdate = function(d,include_time){
