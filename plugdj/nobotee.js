@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.1";
+nobotee.version = "0.06.2";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -78,7 +78,7 @@ nobotee.ui = {
 		 }
 	},
 	build: function(){
-		$( "body" ).prepend("<style id='nbtstyles'>.cutelink1{text-decoration:underline; color:#888;} .cutelink1:hover{color:#000;} .newsetting{padding:5px 0 5px 0;} #customgdocbox{width:350px;} #customgreetingbox{width:350px;} .newsetting2{padding:10px 0 10px 0;} .nbtset_divide{display:block; width:100%; border-bottom:1px solid #ccc; margin-top:15px; margin-bottom:15px;} #thesettingsnbt{display:none;} .dogcat{overflow-y:scroll; height:300px;background-color:#fff; padding:15px 5px 10px 5px;} .nbtclosethat{float:right; color:#fff; text-decoration:none; font-weight:400;} .nbtclosethat:hover{color:green;} .catdog{padding:10px 5px 10px 5px; background-color:#333; color:#fff; font-size:14px; font-weight:bold;} div.nbtsettings{font-family:helvetica,arial,sans-serif;-webkit-text-rendering: optimizeLegibility; display:inline-block; box-sizing:border-box; margin-right:-.25em;height:100%;content:'';vertical-align:middle; font-size:12px; width:500px; padding: 0; color:#000; }ul.nbscr{margin:0; padding:0; list-style-type:none;} .nb_on{color:green;} .nb_off{color:red;} .nb_btnrow{border-top:1px dotted #ccc; margin-top:8px; padding-top:8px;} .nb_btnrow:first-child{padding-top:0;border-top:none;} #nbsc_mode{color:#888;} li.nb_nt{padding:2px;} li.nb_nt:nth-child(even){background-color:#000073;} #nb_buttons{padding-left:2px; padding-right:2px;} #nb_screen{height:70px; border-bottom:1px solid #00f; background-color:#00f; color:#eee; overflow-y:scroll;} #nobotee h2{padding-left:2px;font-size:12px; color:#fff; display:block; background-color:#444; margin:0; font-weight:700;} #nobotee{z-index:9; font-family:helvetica,arial,sans-serif; left:2px; font-size:12px;height:232px; position:absolute; color:#000; top:55px; width:188px; background-color:#fff;}</style><div id='nobotee'></div>");
+		$( "body" ).prepend("<link id='nbtstyles' rel='stylesheet' href='http://854.github.io/plugdj/nbtstyles.css' type='text/css'><div id='nobotee'></div>");
 		$( "#nobotee" ).append("<div id='nb_contents'><h2>nobotee "+nobotee.version+"</h2></div>");
 		$( "#nb_contents" ).append("<div id='nb_screen'><ul class='nbscr' id='nbscr'></ul></div>");
 
