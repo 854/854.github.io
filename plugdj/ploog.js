@@ -60,7 +60,7 @@ ploog.queueUpdate = function(snapshot){
 
 ploog.ui = {
 	build: function(){
-		$( "body" ).prepend("<style id='ploog_styles'>.ploog_currentdj{color:#ffdd6f;}#ploog_screen{padding-top:10px;padding-left:4px;height:210px; overflow-y:scroll;} #ploog_ui{z-index:9; font-family:helvetica,arial,sans-serif; left:12px; font-size:12px;height:250px; position:absolute; color:#000; top:70px; width:170px; background-color:#282C35; color:#d1d1d1;} #ploog_headr{line-height:22px;background-color:#1C1F25;font-weight:700;color:#d1d1d1;padding-left:4px;}</style><div id='ploog_ui'></div>");
+		$( "body" ).prepend("<style id='ploog_styles'>.ploog_currentdj{color:#ffdd6f;}#ploog_screen{padding-top:10px;padding-left:4px;height:210px; overflow-y:scroll;} #ploog_ui{z-index:40; font-family:helvetica,arial,sans-serif; left:12px; font-size:12px;height:250px; position:absolute; color:#000; top:70px; width:170px; background-color:#282C35; color:#d1d1d1;} #ploog_headr{line-height:22px;background-color:#1C1F25;font-weight:700;color:#d1d1d1;padding-left:4px;}</style><div id='ploog_ui'></div>");
 		$( "#ploog_ui" ).append("<div id='ploog_headr'>#NARF</div>");
 		$( "#ploog_ui" ).append("<div id='ploog_screen'>Loading...</div>");
 		$("#ploog_ui").drags({handle:"#ploog_headr"});
