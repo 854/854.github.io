@@ -63,7 +63,7 @@ ploog.ui = {
 		$( "body" ).prepend("<style id='ploog_styles'>.ploog_currentdj{color:#ffdd6f;}#ploog_screen{padding-top:10px;padding-left:4px;height:210px; overflow-y:scroll;} #ploog_ui{z-index:9; font-family:helvetica,arial,sans-serif; left:12px; font-size:12px;height:250px; position:absolute; color:#000; top:70px; width:170px; background-color:#282C35; color:#d1d1d1;} #ploog_headr{line-height:22px;background-color:#1C1F25;font-weight:700;color:#d1d1d1;padding-left:4px;}</style><div id='ploog_ui'></div>");
 		$( "#ploog_ui" ).append("<div id='ploog_headr'>#NARF</div>");
 		$( "#ploog_ui" ).append("<div id='ploog_screen'>Loading...</div>");
-		$("#ploog_ui").draggable();
+		$("#ploog_ui").drags({handle:"#ploog_headr"});
 	},
 	destroy: function(){
 		$("#ploog_styles").remove();
@@ -88,38 +88,47 @@ ploog.cleanUp = function(){
 	ploog.started = false;
 };
 
-$.fn.draggable = function(){
-    var $this = this,
-    ns = 'draggable_'+(Math.random()+'').replace('.',''),
-    mm = 'mousemove.'+ns,
-    mu = 'mouseup.'+ns,
-    $w = $(window),
-    isFixed = ($this.css('position') === 'fixed'),
-    adjX = 0, adjY = 0;
+(function($) {
+    $.fn.drags = function(opt) {
 
-    $this.mousedown(function(ev){
-        var pos = $this.offset();
-        if (isFixed) {
-            adjX = $w.scrollLeft(); adjY = $w.scrollTop();
+        opt = $.extend({handle:"",cursor:"move"}, opt);
+
+        if(opt.handle === "") {
+            var $el = this;
+        } else {
+            var $el = this.find(opt.handle);
         }
-        var ox = (ev.pageX - pos.left), oy = (ev.pageY - pos.top);
-        $this.data(ns,{ x : ox, y: oy });
-        $w.on(mm, function(ev){
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (isFixed) {
-                adjX = $w.scrollLeft(); adjY = $w.scrollTop();
-            }
-            var offset = $this.data(ns);
-            $this.css({left: ev.pageX - adjX - offset.x, top: ev.pageY - adjY - offset.y});
-        });
-        $w.on(mu, function(){
-            $w.off(mm + ' ' + mu).removeData(ns);
-        });
-    });
 
-    return this;
-};
+        return $el.css('cursor', opt.cursor).on("mousedown", function(e) {
+            if(opt.handle === "") {
+                var $drag = $(this).addClass('draggable');
+            } else {
+                var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+            }
+            var z_idx = $drag.css('z-index'),
+                drg_h = $drag.outerHeight(),
+                drg_w = $drag.outerWidth(),
+                pos_y = $drag.offset().top + drg_h - e.pageY,
+                pos_x = $drag.offset().left + drg_w - e.pageX;
+            $drag.css('z-index', 1000).parents().on("mousemove", function(e) {
+                $('.draggable').offset({
+                    top:e.pageY + pos_y - drg_h,
+                    left:e.pageX + pos_x - drg_w
+                }).on("mouseup", function() {
+                    $(this).removeClass('draggable').css('z-index', z_idx);
+                });
+            });
+            e.preventDefault(); // disable selection
+        }).on("mouseup", function() {
+            if(opt.handle === "") {
+                $(this).removeClass('draggable');
+            } else {
+                $(this).removeClass('active-handle').parent().removeClass('draggable');
+            }
+        });
+
+    }
+})(jQuery);
 
 if (!ploog.started){
 	ploog.init();
