@@ -1,22 +1,25 @@
 if (typeof(ploog) == "undefined") {
 	var ploog = {
 		started: false,
-		reloadURL: "https://854.github.io/plugdj/ploog.js",
-		media:null,
-		queueInfo: null,
-		dj:null
+		fbLoaded: false
 	};
 }
 
+ploog.onValueChange = null;
 ploog.init = function(){
-	$.getScript("https://cdn.firebase.com/js/client/1.1.0/firebase.js", ploog.yeho);
+	if (!ploog.fbLoaded) {
+		$.getScript("https://cdn.firebase.com/js/client/1.1.0/firebase.js", ploog.yeho);
+	} else {
+		ploog.yeho();
+	}
 	ploog.started = true;
 };
 
 ploog.yeho = function(){
 	console.log("-------------------------\nlaunching Indie Discotheque Queue\n-------------------------");
+	ploog.fbLoaded = true;
 	ploog.queueInfo = new Firebase("https://discotheque-list.firebaseio.com/queue");
-	ploog.queueInfo.on("value", function(snapshot) {ploog.queueUpdate(snapshot);});
+	ploog.onValueChange = ploog.queueInfo.on("value", function(snapshot) {ploog.queueUpdate(snapshot);});
 	ploog.ui.build();
 };
 
@@ -71,24 +74,15 @@ ploog.ui = {
 	}
 }
 
-ploog.reload = function(){
-	ploog.cleanUp();
-	setTimeout(function() {
-		var script=document.createElement('script');
-		script.id='ploog';
-		script.type='text/javascript';
-		script.src=ploog.reloadURL;
-		document.body.appendChild(script);
-	}, 2 * 1000);
-};
-
 ploog.cleanUp = function(){
+	ploog.queueInfo.off("value", ploog.onValueChange);
 	ploog.ui.destroy();
 	$("#ploog").remove();
 	ploog.started = false;
 };
 
 (function($) {
+	if (typeof $.fn.drags == "undefined"){
     $.fn.drags = function(opt) {
 
         opt = $.extend({handle:"",cursor:"move"}, opt);
@@ -127,7 +121,7 @@ ploog.cleanUp = function(){
             }
         });
 
-    }
+    }}else {console.log("drags already exists");}
 })(jQuery);
 
 if (!ploog.started){
