@@ -5,6 +5,7 @@ if (typeof(ploog) == "undefined") {
 	};
 }
 
+ploog.username = "YM";
 ploog.onValueChange = null;
 ploog.init = function(){
 	if (!ploog.fbLoaded) {
@@ -17,6 +18,7 @@ ploog.init = function(){
 
 ploog.yeho = function(){
 	console.log("-------------------------\nlaunching Indie Discotheque Queue\n-------------------------");
+	ploog.usrname = API.getUser().username;
 	ploog.fbLoaded = true;
 	ploog.queueInfo = new Firebase("https://discotheque-list.firebaseio.com/queue");
 	ploog.onValueChange = ploog.queueInfo.on("value", function(snapshot) {ploog.queueUpdate(snapshot);});
@@ -35,7 +37,14 @@ ploog.queueUpdate = function(snapshot){
 		var tListAry = queue.split("\\");
 		if (tListAry.length){
 			for (var i = 0; i < tListAry.length; i++){
-				if (tListAry[i]) queueString += tListAry[i]+"<br/>";
+				if (tListAry[i]){
+					var usrname = tListAry[i].substr(tListAry[i].indexOf(" ") + 1);
+					if (usrname == ploog.usrname){
+						queueString += "<span class=\"ploog_currentdj\">"+tListAry[i]+"</span><br/>";
+					} else {
+						queueString += tListAry[i]+"<br/>";
+					}
+				}
 			}
 		} else {
 			queueString += "The List is empty!<br/>";
@@ -46,8 +55,17 @@ ploog.queueUpdate = function(snapshot){
 	if (djListAry.length){
 		for (var i = 0; i < djListAry.length; i++){
 				if (djListAry[i]){
-					if (i == 0){
-						stageString += "<span class=\"ploog_currentdj\">"+djListAry[i]+"</span><br/>";
+					var lastIndex = djListAry[i].lastIndexOf(" ");
+					var usrname =  djListAry[i].substring(0, lastIndex);
+
+					if (usrname == ploog.usrname){
+						if (i == 0){
+							stageString += "<i><span class=\"ploog_currentdj\">"+djListAry[i]+"</span></i><br/>";
+						} else {
+							stageString += "<span class=\"ploog_currentdj\">"+djListAry[i]+"</span><br/>";
+						}
+					} else if (i == 0) {
+						stageString += "<i>"+djListAry[i]+"</i><br/>";
 					} else {
 						stageString += djListAry[i]+"<br/>";
 					}
