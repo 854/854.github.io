@@ -55,7 +55,7 @@ ploog.queueUpdate = function(snapshot) {
     var djListAry = stage.split("\\");
 
     if (djListAry.length) {
-        for (var i = 0; i < 4; i++) {
+        for (var i = 0; i < djListAry.length; i++) {
             if (djListAry[i]) {
                 var lastIndex = djListAry[i].lastIndexOf(" ");
                 var usrname = djListAry[i].substring(0, lastIndex);
@@ -71,8 +71,6 @@ ploog.queueUpdate = function(snapshot) {
                 } else {
                     stageString += djListAry[i] + "<br/>";
                 }
-            } else {
-                stageString += "<span class=\"ploog_emptyspot\">unoccupied</span><br/>";
             }
         }
     } else {
