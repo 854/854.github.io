@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.4";
+nobotee.version = "0.06.5";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -343,7 +343,7 @@ nobotee.api = {
 				} else {
 					var prsn = nobotee.getid(args);
 					if (prsn){
-						if (nobotee.people[prsn]) response += " | "+args+" streak is "+nobotee.people[args];
+						if (nobotee.people[prsn]) response += " | "+args+" streak is "+nobotee.people[prsn];
 					}
 				}
 				nobotee.talk(response);
