@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.5";
+nobotee.version = "0.06.6";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -72,10 +72,10 @@ nobotee.init = function(){
 nobotee.ui = {
 	self: this,
 	init: function() {
-		 if (!$("#nobotee").length) {
+		if (!$("#nobotee").length) {
 			console.log("nobotee building ui..");
 			nobotee.ui.build();
-		 }
+		}
 	},
 	build: function(){
 		$( "body" ).prepend("<link id='nbtstyles' rel='stylesheet' href='https://854.github.io/plugdj/nbtstyles.css' type='text/css'><div id='nobotee'></div>");
@@ -169,7 +169,6 @@ nobotee.ui = {
 
 		nobotee.storage.save();
 		nobotee.scr.updt("advanced settings have been saved.",1);
-
 	},
 	destroy: function(){
 		$("#nobotee").remove();
@@ -193,7 +192,6 @@ nobotee.scr ={
 			$( "#nbscr" ).append("<li class='nb_nt'>"+txt+"</li>");
 			$('#nb_screen').scrollTop($('#nb_screen')[0].scrollHeight);
 		}
-
 	},
 	clear: function(){
 		$( "#nbscr" ).empty();
@@ -208,7 +206,6 @@ nobotee.scr ={
 			nobotee.scr.song_length();
 		}
 		nobotee.storage.save();
-
 	},
 	gen_list: function(){
 		//TODO: automate this
@@ -251,31 +248,31 @@ nobotee.buttons ={
 	},
 	toggle_time_lmt: function(){
 		if (nobotee.defaults.time_lmt){
-		nobotee.defaults.time_lmt = false;
-		$( "#nbsc_tmlmt" ).replaceWith( "<span class='nb_off' id='nbsc_tmlmt'>off</span>" );
+			nobotee.defaults.time_lmt = false;
+			$( "#nbsc_tmlmt" ).replaceWith( "<span class='nb_off' id='nbsc_tmlmt'>off</span>" );
 		} else {
-		nobotee.defaults.time_lmt = true;
-		$( "#nbsc_tmlmt" ).replaceWith( "<span class='nb_on' id='nbsc_tmlmt'>on</span>" );
+			nobotee.defaults.time_lmt = true;
+			$( "#nbsc_tmlmt" ).replaceWith( "<span class='nb_on' id='nbsc_tmlmt'>on</span>" );
 		}
 		nobotee.storage.save();
 	},
 	toggle_auto_vote: function(){
 		if (nobotee.defaults.autovt){
-		nobotee.defaults.autovt = false;
-		$( "#nbsc_autovt" ).replaceWith( "<span class='nb_off' id='nbsc_autovt'>off</span>" );
+			nobotee.defaults.autovt = false;
+			$( "#nbsc_autovt" ).replaceWith( "<span class='nb_off' id='nbsc_autovt'>off</span>" );
 		} else {
-		nobotee.defaults.autovt = true;
-		$( "#nbsc_autovt" ).replaceWith( "<span class='nb_on' id='nbsc_autovt'>on</span>" );
+			nobotee.defaults.autovt = true;
+			$( "#nbsc_autovt" ).replaceWith( "<span class='nb_on' id='nbsc_autovt'>on</span>" );
 		}
 		nobotee.storage.save();
 	},
 	toggle_cmmnds: function(){
 		if (nobotee.defaults.cmmds){
-		nobotee.defaults.cmmds = false;
-		$( "#nbsc_cmmds" ).replaceWith( "<span class='nb_off' id='nbsc_cmmds'>off</span>" );
+			nobotee.defaults.cmmds = false;
+			$( "#nbsc_cmmds" ).replaceWith( "<span class='nb_off' id='nbsc_cmmds'>off</span>" );
 		} else {
-		nobotee.defaults.cmmds = true;
-		$( "#nbsc_cmmds" ).replaceWith( "<span class='nb_on' id='nbsc_cmmds'>on</span>" );
+			nobotee.defaults.cmmds = true;
+			$( "#nbsc_cmmds" ).replaceWith( "<span class='nb_on' id='nbsc_cmmds'>on</span>" );
 		}
 		nobotee.storage.save();
 	},
@@ -551,8 +548,7 @@ nobotee.api = {
 
 			if (nobotee.advanced_settings.new_song_msg){
 				nobotee.talk("/me :cd: "+nobotee.dj.username+" started playing '"+nobotee.media.title+"' by "+nobotee.media.author);
-				}
-
+			}
 
 			if (nobotee.defaults.mode == "song_length") nobotee.scr.song_length();
 			if (nobotee.defaults.time_lmt){
@@ -565,8 +561,8 @@ nobotee.api = {
 				 	fair_game = false;
 				 	setTimeout(function () {
      					if (nobotee.skiptime == true) {
-      						 API.moderateForceSkip();
-      						 nobotee.scr.updt(dj+" played '"+song+"' and was skipped due to song time limit.",1);
+      						API.moderateForceSkip();
+      						nobotee.scr.updt(dj+" played '"+song+"' and was skipped due to song time limit.",1);
     					 }
    					}, 5000);
 				} else if ((length > 183) && (length <= 320)) {
@@ -605,9 +601,7 @@ nobotee.api = {
 					nobotee.streak = 0;
 					nobotee.api.display_streak(old_streak,old_dj);
 				}
-
 				nobotee.storage.save();
-
 			}
 		}
 	},
@@ -625,7 +619,7 @@ nobotee.api = {
 			}
 			setTimeout(function() {
 					nobotee.talk(response);
-				}, 2 * 1000);
+			}, 2 * 1000);
 		}
 	},
 	newexit: function(data){
@@ -663,23 +657,22 @@ nobotee.api = {
             	}
        		});
 		}
-
 	},
 	get_img: function(term,name){
 		$.ajax({
-           		dataType: "jsonp",
-           		type : "GET",
-            	url: "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+encodeURIComponent(term)+"&jsoncallback=formatted", 
-            	success:  function (formatted){
-            		if (formatted.responseData.results.length){   
-            			var alltheimages = formatted.responseData.results;
-            			var theimage = alltheimages[Math.floor(Math.random() * (alltheimages.length))];
-				       nobotee.talk(nobotee.atmessage(name)+" "+theimage.unescapedUrl);
-    				} else {
-        				nobotee.talk(nobotee.atmessage(name)+" what is that?");
-      				}
-            	}
-       		});
+           	dataType: "jsonp",
+           	type : "GET",
+            url: "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&q="+encodeURIComponent(term)+"&jsoncallback=formatted", 
+            success:  function (formatted){
+            	if (formatted.responseData.results.length){   
+            		var alltheimages = formatted.responseData.results;
+            		var theimage = alltheimages[Math.floor(Math.random() * (alltheimages.length))];
+			       nobotee.talk(nobotee.atmessage(name)+" "+theimage.unescapedUrl);
+    			} else {
+        			nobotee.talk(nobotee.atmessage(name)+" what is that?");
+      			}
+            }
+       	});
 	},
 	firetruck: function(id){
 		console.log("fired");
@@ -719,7 +712,7 @@ nobotee.api = {
 				if (obj.hasOwnProperty(key)) str += "*"+key+"<br/>";
 			}
 		}
-		if (hats) str = str = str.substring(0, str.length - 2);
+		if (hats) str = str.substring(0, str.length - 2);
 		return str;
 	}
 };
@@ -801,29 +794,29 @@ nobotee.talk= function(txt){
 };
 
 nobotee.getid = function(username){
-		var i;
-		var users = API.getUsers();
-		var id = null;
-		for (i = 0; i < users.length; ++i) {
-    		if (username == users[i].username){
-    			id = users[i].id;
-    			break;
-    		}
-		}
-		return id;
+	var i;
+	var users = API.getUsers();
+	var id = null;
+	for (i = 0; i < users.length; ++i) {
+   		if (username == users[i].username){
+   			id = users[i].id;
+   			break;
+   		}
+	}
+	return id;
 };
 
 nobotee.getobj = function(username){
-		var i;
-		var users = API.getUsers();
-		var obj = null;
-		for (i = 0; i < users.length; ++i) {
-    		if (username == users[i].username){
-    			obj = users[i];
-    			break;
-    		}
-		}
-		return obj;
+	var i;
+	var users = API.getUsers();
+	var obj = null;
+	for (i = 0; i < users.length; ++i) {
+    	if (username == users[i].username){
+    		obj = users[i];
+    		break;
+    	}
+	}
+	return obj;
 };
 
 nobotee.atmessage = function (username) {
@@ -862,7 +855,7 @@ nobotee.formatdate = function(d,include_time){
 	var str = month+"/"+day+"/"+year;
 	if (include_time) str += " @ "+newhours+":"+minutes+""+ampm+" (UTC"+offset+")"
 	return str;
-}
+};
 
 nobotee.themevote  = {
 	active: false,
@@ -885,7 +878,7 @@ nobotee.themevote  = {
 		};
 		setTimeout(function() {
 				nobotee.themevote.end();
-			}, 30 * 1000);
+		}, 30 * 1000);
 	},
 	size: function(obj) {
 		var size = 0;
@@ -941,24 +934,27 @@ nobotee.storage = {
 	},
 	restore: function(){
 		var favorite = localStorage["nobotee"];
- 		 if (!favorite) {
+ 		if (!favorite) {
     		return;
- 		 }
- 		 var preferences = JSON.parse(favorite);
- 		 nobotee.defaults = preferences.defaults;
- 		 nobotee.theme = preferences.theme;
- 		 if (preferences.imgblacklist) nobotee.imgblacklist = preferences.imgblacklist;
- 		 if (preferences.users){
- 		 	nobotee.people = preferences.users;
- 		 } else {
- 		 	nobotee.people = {};
- 		 }
- 		 if (preferences.streak){
- 		 	nobotee.streak = preferences.streak;
- 		 } else {
- 		 	nobotee.streak = 0;
- 		 }
- 		 if (preferences.advanced_settings) nobotee.advanced_settings = preferences.advanced_settings;
+ 		}
+ 		var preferences = JSON.parse(favorite);
+ 		nobotee.defaults = preferences.defaults;
+ 		nobotee.theme = preferences.theme;
+ 		if (preferences.imgblacklist) nobotee.imgblacklist = preferences.imgblacklist;
+
+ 		if (preferences.users){
+ 			nobotee.people = preferences.users;
+ 		} else {
+ 			nobotee.people = {};
+ 		}
+
+ 		if (preferences.streak){
+ 			nobotee.streak = preferences.streak;
+ 		} else {
+ 			nobotee.streak = 0;
+ 		}
+
+ 		if (preferences.advanced_settings) nobotee.advanced_settings = preferences.advanced_settings;
 	}
 };
 
