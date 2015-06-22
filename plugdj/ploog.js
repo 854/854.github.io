@@ -105,12 +105,14 @@ ploog.ui = {
     	if (!ploog.ui.hidden){
     		ploog.ui.hidden = true;
     		$("#ploog_ui").css('display', 'none');
-    		Firebase.goOffline();
+    		ploog.queueInfo.off("value", ploog.onValueChange);
     		API.chatLog("ID List is hidden. Type /idlist to bring it back.");
     	} else {
     		ploog.ui.hidden = false;
     		$("#ploog_ui").css('display', 'block');
-    		Firebase.goOnline();
+    		ploog.onValueChange = ploog.queueInfo.on("value", function(snapshot) {
+        		ploog.queueUpdate(snapshot);
+   			});
     	}
     },
     hidden: false
