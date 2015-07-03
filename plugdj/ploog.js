@@ -38,8 +38,13 @@ ploog.queueUpdate = function(snapshot) {
     var data = snapshot.val();
     var queue = data.queue;
     var stage = data.stage;
+    var theme = data.theme;
+    var themeString = "";
     var queueString = "<br/><strong>Queue</strong><br/>";
     var stageString = "<strong>DJs</strong><br/>";
+    if (theme){
+        themeString += "<strong>Theme</strong><br/>"+theme+"<br/><br/>";
+    }
     if (queue == "") {
         queueString += "The list is empty!<br/>";
     } else {
@@ -84,7 +89,7 @@ ploog.queueUpdate = function(snapshot) {
         stageString += "Nobody is DJing!";
     }
 
-    $("#ploog_screen").html(stageString + "" + queueString);
+    $("#ploog_screen").html(themeString + "" + stageString + "" + queueString);
 
 };
 
