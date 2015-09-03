@@ -48,7 +48,7 @@ if (typeof(nobotee) == "undefined") {
 	nobotee.entered = Date.now();
 }
 
-nobotee.version = "0.06.7";
+nobotee.version = "0.06.8";
 
 // Redefine all nobotee functions, overwritting any code on reload..
 nobotee.start = function() {
@@ -513,7 +513,7 @@ nobotee.api = {
 		//end of commands
 		} else if (msg == "1" && nobotee.themevote.active){
 			nobotee.themevote.params.votes[id] = 1;
-		} else if ((msg.match(/70.58823529411765/)) && (nobotee.defaults.cmmds)){
+		} else if ((msg.match(/background-position:70.58823529411765% 26.47058823529412%;background-size:3500%/)) && (nobotee.defaults.cmmds)){
 			nobotee.api.firetruck(id);
 		}
 
