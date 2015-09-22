@@ -1,11 +1,13 @@
 var autoDub = {
 	started: false,
-	version: "00.01"
+	version: "00.02"
 }
 
 autoDub.newSong = function(){
+	var songName = $(".currentSong").text();
+	if (songName == "loading...") return;
 	$(".dubup").click();
-	console.log("new song. updub triggered.");
+	console.log("voted for "+songName);
 };
 
 autoDub.init = function(){
