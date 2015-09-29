@@ -39,6 +39,9 @@ autoDub.storage = {
  		}
  		var preferences = JSON.parse(favorite);
  		$.extend(autoDub, preferences);
+ 		var onOff = "ON";
+		if (preferences.blockInlineImages) onOff = "OFF";
+		$("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleInline()\" class=\"autodub-link\">[ADub] Chat Images: "+onOff+"</a>");
 	}
 };
 
@@ -58,9 +61,6 @@ autoDub.init = function(){
 	$('.currentSong').bind("DOMSubtreeModified", autoDub.newSong);
 	Dubtrack.Events.bind("realtime:chat-message", autoDub.newChat);
 	$(".dubup").click();
-	var onOff = "ON";
-	if (autoDub.blockInlineImages) onOff = "OFF";
-	$("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleInline()\" class=\"autodub-link\">[ADub] Chat Images: "+onOff+"</a>");
 	console.log("autodub v"+autoDub.version+" is a go!");
 };
 
