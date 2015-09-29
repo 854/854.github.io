@@ -1,6 +1,6 @@
 var autoDub = {
 	started: false,
-	version: "00.05",
+	version: "00.06",
 	blockInlineImages: true,
 	autoVote: true
 }
@@ -35,6 +35,10 @@ autoDub.storage = {
 	restore: function(){
 		var favorite = localStorage["autoDub"];
  		if (!favorite) {
+ 			var onOff = "ON";
+			if (autoDub.blockInLineImages) onOff = "OFF";
+			$("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleInline()\" class=\"autodub-link\">[ADub] Chat Images: "+onOff+"</a>");
+			autoDub.storage.save();
     		return;
  		}
  		var preferences = JSON.parse(favorite);
