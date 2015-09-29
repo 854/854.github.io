@@ -15,7 +15,7 @@ autoDub.newChat = function(data){
 	try{
 		var url = data.message;
  		if ((url.slice(-4) == '.png') || (url.slice(-4) == '.jpg') || (url.slice(-4) == '.gif')) {
- 			$(".chat-main").find("p:last").html("<a href=\""+data.message+"\">"+data.message+"</a>");
+ 			if (autoDub.blockInlineImages) $(".chat-main").find("p:last").html("<a href=\""+data.message+"\">"+data.message+"</a>");
  		}
 	} catch (e){
 
