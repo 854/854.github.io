@@ -14,10 +14,17 @@ autoDub.newSong = function(){
 
 autoDub.newChat = function(data){
 	try{
-		var url = data.message;
- 		if ((url.slice(-4) == '.png') || (url.slice(-4) == '.jpg') || (url.slice(-4) == '.gif') || (url.slice(-5) == '.jpeg')) {
- 			if (autoDub.blockInlineImages) $(".chat-main").find("p:last").html("<a class=\"autolink\" target=\"_blank\" href=\""+data.message+"\">"+data.message+"</a>");
- 		}
+		var splitMsg = data.message.split(' ');
+		var msg = data.user.username + ": ";
+		var len = splitMsg.length;
+		for(var i = 0 ; i <  len; i++)
+		{
+			if ((splitMsg[i].indexOf('.png') > -1) || (splitMsg[i].indexOf('.jpg') > -1) || (splitMsg[i].indexOf('.gif') > -1) || (splitMsg[i].indexOf('.jpeg') > -1){
+				splitMsg[i] = "<a class=\"autolink\" target=\"_blank\" href=\""+splitMsg[i]+"\">"+splitMsg[i]+"</a>";
+			}
+			msg += splitMsg[i] + " " ;
+		}
+ 		if (autoDub.blockInlineImages) $(".chat-main").find("p:last").html(msg);
 	} catch (e){
 
 	}
