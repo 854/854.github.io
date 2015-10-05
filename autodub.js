@@ -63,8 +63,8 @@ autoDub.ui = {
 
 autoDub.newVote = function(data){
 	var username = $(".user-info-button").text();
-	if (data.user.username == username && data.dubtype == "downdub"){
-		//cancel the upvote if user downvoted
+	if (data.user.username == username){
+		//cancel the upvote if user voted
 		clearTimeout(autoDub.songtimer);
         autoDub.songtimer = null;
         $("#autoDubTimer").countdown("destroy");
