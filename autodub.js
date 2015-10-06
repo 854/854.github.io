@@ -1,7 +1,7 @@
 var autoDub = {
     started: false,
     mode: "classic",
-    version: "00.04",
+    version: "00.05",
     songtimer: null
 };
 
@@ -30,9 +30,9 @@ autoDub.newSong = function (data) {
         });
         autoDub.songtimer = setTimeout(function () {
             autoDub.songtimer = null;
-            $(".dubup").click();
             $("#autoDubTimer").countdown("destroy");
             $("#autoDubTimer").text("");
+            $(".dubup").click();
             console.log("voted.");
         }, thetimer);
     }
@@ -70,11 +70,13 @@ autoDub.newVote = function (data) {
     var username = $(".user-info-button").text();
     if (data.user.username == username) {
         //cancel the upvote if user voted
-        clearTimeout(autoDub.songtimer);
-        autoDub.songtimer = null;
-        $("#autoDubTimer").countdown("destroy");
-        $("#autoDubTimer").text("");
-        console.log("autovote off until next song.");
+        if (autoDub.songtimer != null) {
+        	clearTimeout(autoDub.songtimer);
+        	autoDub.songtimer = null;
+        	$("#autoDubTimer").countdown("destroy");
+        	$("#autoDubTimer").text("");
+        	console.log("autovote off until next song.");
+    	}
     }
 };
 
