@@ -9,7 +9,7 @@ autoDub.newSong = function (data) {
     if (data.startTime !== -1) return;
     var duration = data.songInfo.songLength;
     var length = Math.floor(duration);
-    var whatever = Math.random() * 5;
+    var whatever = (Math.random() * 4) + 1;
     var thetimer = Math.floor(length / whatever);
     console.log(thetimer / 1000);
     if (autoDub.songtimer != null) {
