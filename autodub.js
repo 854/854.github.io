@@ -2,7 +2,22 @@ var autoDub = {
     started: false,
     mode: "classic",
     version: "00.05",
+    whatsNew: "AutoDub now has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
+    lastLoaded: null,
     songtimer: null
+};
+
+autoDub.versionMessage = function(){
+	if (autoDub.lastLoaded == autoDub.version){
+		var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v"+autoDub.version+" is running in "+autoDub.mode+" mode.</li>";
+	} else {
+		var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] New in v"+autoDub.version+"</span><br/>";
+		autoDub.lastLoaded = autoDub.version;
+		autoDub.storage.save();
+		newStuff += autoDub.whatsNew;
+		var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">"+newStuff+"</li>";
+	}
+	$(".chat-main").append(msg);
 };
 
 autoDub.newSong = function (data) {
@@ -56,6 +71,9 @@ autoDub.ui = {
     init: function (mode) {
         var themode = autoDub.mode;
         if (mode) themode = mode;
+        setTimeout(function() {
+        	autoDub.versionMessage();
+    	}, 3000);
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
     },
     update: function () {
@@ -95,14 +113,20 @@ autoDub.storage = {
     save: function () {
         var save_file = {
             mode: autoDub.mode,
-            autoVote: autoDub.autoVote
+            autoVote: autoDub.autoVote,
+            lastLoaded: autoDub.lastLoaded
         };
         var preferences = JSON.stringify(save_file);
         localStorage["autoDub"] = preferences;
     },
     restore: function () {
         var favorite = localStorage["autoDub"];
-        if (!favorite) return;
+        if (!favorite) {
+        	autoDub.ui.init();
+        	autoDub.storage.save();
+        	return;
+        }
+        console.log("autodub settings found.");
         var preferences = JSON.parse(favorite);
         $.extend(autoDub, preferences);
         autoDub.ui.init(preferences.mode);
