@@ -1,7 +1,7 @@
 var autoDub = {
     started: false,
     mode: "classic",
-    version: "00.05",
+    version: "00.06",
     whatsNew: "AutoDub now has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
     lastLoaded: null,
     songtimer: null
@@ -71,16 +71,29 @@ autoDub.ui = {
     init: function (mode) {
         var themode = autoDub.mode;
         if (mode) themode = mode;
-        setTimeout(function() {
-        	autoDub.versionMessage();
-    	}, 3000);
-        $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
+        if (autoDub.mode === "classic"){
+             $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AD Mode: Dub at start</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
+
+        }else {
+            if (autoDub.mode === "timer"){
+             $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AD Mode: Dub at random</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
+
+        }
+        }
+
     },
     update: function () {
         var themode = autoDub.mode;
         $("#autoDubTimer").countdown("destroy");
         $("#autoDubTimer").text("");
-        $("#autoDubMode").text("AutoDub: " + themode);
+        if (autoDub.mode == "classic"){
+            $("#autoDubMode").text("AD Mode: Dub at start");
+            $(".chat-main").append("<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class='autodub'><font size='-2'>AD Mode Enabled: Classic - Votes at beginning of song.</font></li>");
+
+        }else {
+            $("#autoDubMode").text("AD Mode: Dub at random");
+            $(".chat-main").append("<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class='autodub'><font size='-2'>AD Mode Enabled: Random - Votes randomly during the song.</font></li>");
+        }
     }
 };
 
