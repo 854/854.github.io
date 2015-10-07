@@ -80,12 +80,21 @@ autoDub.ui = {
         	}
     	}, 2000);
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
+    	autoDub.ui.toolTips();
     },
     update: function () {
         var themode = autoDub.mode;
         $("#autoDubTimer").countdown("destroy");
         $("#autoDubTimer").text("");
         $("#autoDubMode").text("AutoDub: " + themode);
+        autoDub.ui.toolTips();
+    },
+    toolTips: function(){
+    	if (autoDub.mode == "classic"){
+    		$('.autodub-link').prop('title', 'AutoDub is in classic mode. This autovotes at the beginning of each song. Click to change modes.');
+    	} else if (autoDub.mode == "timer"){
+    		$('.autodub-link').prop('title', 'AutoDub is in timer mode. This autovotes at a random time during each song. Click to change modes.');
+    	}
     }
 };
 
