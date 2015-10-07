@@ -1,9 +1,10 @@
 var autoDub = {
     started: false,
     mode: "classic",
-    version: "00.05",
+    version: "00.06",
     whatsNew: "AutoDub now has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
     lastLoaded: null,
+    roomCheck: null,
     songtimer: null
 };
 
@@ -71,9 +72,13 @@ autoDub.ui = {
     init: function (mode) {
         var themode = autoDub.mode;
         if (mode) themode = mode;
-        setTimeout(function() {
-        	autoDub.versionMessage();
-    	}, 3000);
+        autoDub.roomCheck = setInterval(function() {
+        	if (window.location.href.match(/\/join\//)){
+	        	autoDub.versionMessage();
+	        	clearInterval(autoDub.roomCheck);
+	        	autoDub.roomCheck = null;
+        	}
+    	}, 2000);
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
     },
     update: function () {
