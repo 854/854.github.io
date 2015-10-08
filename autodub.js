@@ -5,20 +5,21 @@ var autoDub = {
     whatsNew: "AutoDub now has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
     lastLoaded: null,
     roomCheck: null,
-    songtimer: null
+    songtimer: null,
+    toolTip: null
 };
 
-autoDub.versionMessage = function(){
-	if (autoDub.lastLoaded == autoDub.version){
-		var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v"+autoDub.version+" is running in "+autoDub.mode+" mode.</li>";
-	} else {
-		var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] New in v"+autoDub.version+"</span><br/>";
-		autoDub.lastLoaded = autoDub.version;
-		autoDub.storage.save();
-		newStuff += autoDub.whatsNew;
-		var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">"+newStuff+"</li>";
-	}
-	$(".chat-main").append(msg);
+autoDub.versionMessage = function () {
+    if (autoDub.lastLoaded == autoDub.version) {
+        var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v" + autoDub.version + " is running in " + autoDub.mode + " mode.</li>";
+    } else {
+        var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] New in v" + autoDub.version + "</span><br/>";
+        autoDub.lastLoaded = autoDub.version;
+        autoDub.storage.save();
+        newStuff += autoDub.whatsNew;
+        var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">" + newStuff + "</li>";
+    }
+    $(".chat-main").append(msg);
 };
 
 autoDub.newSong = function (data) {
@@ -72,15 +73,30 @@ autoDub.ui = {
     init: function (mode) {
         var themode = autoDub.mode;
         if (mode) themode = mode;
-        autoDub.roomCheck = setInterval(function() {
-        	if (window.location.href.match(/\/join\//)){
-	        	autoDub.versionMessage();
-	        	clearInterval(autoDub.roomCheck);
-	        	autoDub.roomCheck = null;
-        	}
-    	}, 2000);
+        autoDub.roomCheck = setInterval(function () {
+            if (window.location.href.match(/\/join\//)) {
+                autoDub.versionMessage();
+                clearInterval(autoDub.roomCheck);
+                autoDub.roomCheck = null;
+            }
+        }, 2000);
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
-    	autoDub.ui.toolTips();
+        autoDub.ui.toolTips();
+        $('.autodub-link').hover(function () {
+            $('<p class="tooltip" style="max-width:150px;z-index:1000000;position:absolute;padding:5px;background-color:cyan;color:#000;font-size:14px;font-weight:700;"></p>')
+                .text(autoDub.toolTip)
+                .appendTo('body');
+        }, function () {
+            $('.tooltip').remove();
+        }).mousemove(function (e) {
+            var mousex = e.pageX + 20;
+            var mousey = e.pageY + 10;
+            $('.tooltip')
+                .css({
+                    top: mousey,
+                    left: mousex
+                })
+        });
     },
     update: function () {
         var themode = autoDub.mode;
@@ -89,12 +105,13 @@ autoDub.ui = {
         $("#autoDubMode").text("AutoDub: " + themode);
         autoDub.ui.toolTips();
     },
-    toolTips: function(){
-    	if (autoDub.mode == "classic"){
-    		$('.autodub-link').prop('title', 'AutoDub is in classic mode. This autovotes at the beginning of each song. Click to change modes.');
-    	} else if (autoDub.mode == "timer"){
-    		$('.autodub-link').prop('title', 'AutoDub is in timer mode. This autovotes at a random time during each song. Click to change modes.');
-    	}
+    toolTips: function () {
+        if (autoDub.mode == "classic") {
+            autoDub.toolTip = 'AutoDub is in classic mode. This autovotes at the beginning of each song. Click to change modes.';
+        } else if (autoDub.mode == "timer") {
+            autoDub.toolTip = 'AutoDub is in timer mode. This autovotes at a random time during each song. Click to change modes.';
+        }
+        if ($(".tooltip").text()) $(".tooltip").text(autoDub.toolTip);
     }
 };
 
@@ -103,12 +120,12 @@ autoDub.newVote = function (data) {
     if (data.user.username == username) {
         //cancel the upvote if user voted
         if (autoDub.songtimer != null) {
-        	clearTimeout(autoDub.songtimer);
-        	autoDub.songtimer = null;
-        	$("#autoDubTimer").countdown("destroy");
-        	$("#autoDubTimer").text("");
-        	console.log("autovote off until next song.");
-    	}
+            clearTimeout(autoDub.songtimer);
+            autoDub.songtimer = null;
+            $("#autoDubTimer").countdown("destroy");
+            $("#autoDubTimer").text("");
+            console.log("autovote off until next song.");
+        }
     }
 };
 
@@ -136,9 +153,9 @@ autoDub.storage = {
     restore: function () {
         var favorite = localStorage["autoDub"];
         if (!favorite) {
-        	autoDub.ui.init();
-        	autoDub.storage.save();
-        	return;
+            autoDub.ui.init();
+            autoDub.storage.save();
+            return;
         }
         console.log("autodub settings found.");
         var preferences = JSON.parse(favorite);
