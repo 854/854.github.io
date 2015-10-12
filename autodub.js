@@ -86,7 +86,7 @@ autoDub.ui = {
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
         autoDub.ui.toolTips();
         $('.autodub-link').hover(function () {
-            $('<p class="tooltip" style="max-width:150px;opacity:0.z-index:1000000;position:absolute;padding:5px;background-color:cyan;color:#000;font-size:14px;font-weight:700;"></p>')
+            $('<p class="tooltip" style="max-width:150px;opacity:0.7;z-index:1000000;position:absolute;padding:5px;background-color:cyan;color:#000;font-size:14px;font-weight:700;"></p>')
                 .text(autoDub.toolTip)
                 .appendTo('body');
         }, function () {
