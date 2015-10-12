@@ -6,7 +6,8 @@ var autoDub = {
     lastLoaded: null,
     roomCheck: null,
     songtimer: null,
-    toolTip: null
+    toolTip: null,
+    lastSong: null
 };
 
 autoDub.versionMessage = function () {
@@ -23,7 +24,9 @@ autoDub.versionMessage = function () {
 };
 
 autoDub.newSong = function (data) {
-    if (data.startTime !== -1) return;
+    console.log(data);
+    if (data.song.songid == autoDub.lastSong) return;
+    autoDub.lastSong = data.song.songid;
     var duration = data.songInfo.songLength;
     var length = Math.floor(duration);
     var whatever = (Math.random() * 4) + 1;
@@ -83,7 +86,7 @@ autoDub.ui = {
         $("#main-menu-left").append("<a href=\"#\" onclick=\"autoDub.toggleMode()\" class=\"autodub-link\"><span id=\"autoDubMode\">AutoDub: " + themode + "</span> <span style=\"float:right;\" id=\"autoDubTimer\"></span></a>");
         autoDub.ui.toolTips();
         $('.autodub-link').hover(function () {
-            $('<p class="tooltip" style="max-width:150px;opacity:0.7;z-index:1000000;position:absolute;padding:5px;background-color:cyan;color:#000;font-size:14px;font-weight:700;"></p>')
+            $('<p class="tooltip" style="max-width:150px;opacity:0.z-index:1000000;position:absolute;padding:5px;background-color:cyan;color:#000;font-size:14px;font-weight:700;"></p>')
                 .text(autoDub.toolTip)
                 .appendTo('body');
         }, function () {
