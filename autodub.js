@@ -2,7 +2,8 @@ var autoDub = {
     started: false,
     mode: "classic",
     version: "00.07",
-    whatsNew: "AutoDub now has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
+    whatsNew: "Fixed a bug that broke Classic mode after the dubtrack.fm redesign.",
+    firstMessage:"AutoDub has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
     lastLoaded: null,
     roomCheck: null,
     songtimer: null,
@@ -13,6 +14,12 @@ var autoDub = {
 autoDub.versionMessage = function () {
     if (autoDub.lastLoaded == autoDub.version) {
         var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v" + autoDub.version + " is running in " + autoDub.mode + " mode.</li>";
+    } else if (!autoDub.lastLoaded){
+        var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] Welcome to AutoDub v" + autoDub.version + "</span><br/>";
+        autoDub.lastLoaded = autoDub.version;
+        autoDub.storage.save();
+        newStuff += autoDub.firstMessage;
+        var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">" + newStuff + "</li>";
     } else {
         var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] New in v" + autoDub.version + "</span><br/>";
         autoDub.lastLoaded = autoDub.version;
