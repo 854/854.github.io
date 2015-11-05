@@ -7,6 +7,7 @@ var autoDub = {
     lastLoaded: null,
     roomCheck: null,
     songtimer: null,
+    userid: null,
     toolTip: null,
     lastSong: null
 };
@@ -76,7 +77,56 @@ autoDub.init = function () {
     Dubtrack.Events.bind("realtime:room_playlist-update", autoDub.newSong);
     Dubtrack.Events.bind("realtime:room_playlist-dub", autoDub.newVote);
     $(".dubup").click();
+    if (window.location.href.match(/\/join\/indie-discotheque/)) {
+        autoDub.idmode.init();       
+    }
     console.log("autodub v" + autoDub.version + " is a go!");
+};
+
+autoDub.idmode = {
+    fb: null,
+    onValueChange: null,
+    userid: null,
+    init: function(){
+        autoDub.idmode.getName();
+    },
+    getUserId: function(username){
+         $.ajax({
+            dataType: "json",
+            type: "GET",
+            url: "https://api.dubtrack.fm/user/"+username,
+            success: function(things) {
+                var data = things.data;
+                var userid = data.userInfo.userid;
+                autoDub.idmode.userid = userid;
+                autoDub.idmode.startFirebase();
+            }
+        });
+    },
+    startFirebase: function(){
+        $.getScript("https://cdn.firebase.com/js/client/1.1.0/firebase.js", autoDub.idmode.initFirebase);
+    },
+    initFirebase: function(){
+        autoDub.idmode.fb = new Firebase("https://discocheques.firebaseio.com/bank/"+autoDub.idmode.userid);
+        autoDub.idmode.onValueChange = autoDub.idmode.fb.on("value", function(snapshot) {
+            autoDub.idmode.balchange(snapshot);
+        });
+    },
+    balchange: function(snapshot){
+        var data = snapshot.val();
+        var bal = data.bal;
+        $("#discobal").text("Balance: "+bal+" discotheques");
+    },
+    getName: function(){
+        var username = $(".user-info").text();
+        if (username == ""){
+            setTimeout(function() {
+                autoDub.idmode.getName();
+            }, 3000);
+        } else {
+            autoDub.idmode.getUserId(username);
+        }
+    }
 };
 
 autoDub.ui = {
@@ -107,6 +157,11 @@ autoDub.ui = {
                     left: mousex
                 })
         });
+        if (window.location.href.match(/\/join\/indie-discotheque/)) {
+            $(".right_section").css( "margin-top", "20px" );
+            $(".right_section").prepend("<div id=\"discobal\" style=\"position: absolute; margin-top: -20px; font-size: 14px;\">Loading your Discocheque balance...</div>");
+        }
+   
     },
     update: function () {
         var themode = autoDub.mode;
@@ -126,7 +181,7 @@ autoDub.ui = {
 };
 
 autoDub.newVote = function (data) {
-    var username = $(".user-info-button").text();
+    var username = $(".user-info").text();
     if (data.user.username == username) {
         //cancel the upvote if user voted
         if (autoDub.songtimer != null) {
