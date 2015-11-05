@@ -160,7 +160,7 @@ autoDub.ui = {
                 })
         });
         if (window.location.href.match(/\/join\/indie-discotheque/)) {
-            $(".right_section").css( "margin-top", "20px" );
+            $(".right_section").css( "margin-top", "10px" );
             $(".right_section").prepend("<div id=\"discobal\" style=\"position: absolute; margin-top: -20px; font-size: 14px;\">Loading your Discocheque balance...</div>");
             
             setTimeout(function() {
