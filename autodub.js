@@ -77,9 +77,6 @@ autoDub.init = function () {
     Dubtrack.Events.bind("realtime:room_playlist-update", autoDub.newSong);
     Dubtrack.Events.bind("realtime:room_playlist-dub", autoDub.newVote);
     $(".dubup").click();
-    if (window.location.href.match(/\/join\/indie-discotheque/)) {
-        autoDub.idmode.init();       
-    }
     console.log("autodub v" + autoDub.version + " is a go!");
 };
 
@@ -114,7 +111,12 @@ autoDub.idmode = {
     },
     balchange: function(snapshot){
         var data = snapshot.val();
-        var bal = data.bal;
+        if (data){
+            var bal = data.bal;
+        } else {
+            var bal = 0;
+        }
+
         $("#discobal").text("Balance: "+bal+" discotheques");
     },
     getName: function(){
@@ -160,6 +162,7 @@ autoDub.ui = {
         if (window.location.href.match(/\/join\/indie-discotheque/)) {
             $(".right_section").css( "margin-top", "20px" );
             $(".right_section").prepend("<div id=\"discobal\" style=\"position: absolute; margin-top: -20px; font-size: 14px;\">Loading your Discocheque balance...</div>");
+            autoDub.idmode.init();
         }
    
     },
