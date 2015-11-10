@@ -81,8 +81,22 @@ autoDub.init = function () {
 };
 
 autoDub.idmode = {
+    discoball: {
+        create: function(){
+            $(".right_section").prepend("<div id=\"discoball\" style=\"pointer-events: none; background: transparent url(http://i.imgur.com/Bdn4yrg.gif) no-repeat center top; display: block; width: 100%; height:300px;position: absolute;left: 5;z-index: 6;margin-top: -320px;\"></div>");
+        },
+        up: function(){
+            $("#discoball").animate({'margin-top': '-320px'}, 2000);
+        },
+        down: function(){
+            $("#discoball").animate({'margin-top': '-50px'}, 5000);
+        }
+    },
     fb: null,
     onValueChange: null,
+    onDiscoballChange: null,
+    theBank: null,
+    theRoomShit: null,
     userid: null,
     init: function(){
         autoDub.idmode.getName();
@@ -104,10 +118,23 @@ autoDub.idmode = {
         $.getScript("https://cdn.firebase.com/js/client/1.1.0/firebase.js", autoDub.idmode.initFirebase);
     },
     initFirebase: function(){
-        autoDub.idmode.fb = new Firebase("https://discocheques.firebaseio.com/bank/"+autoDub.idmode.userid);
-        autoDub.idmode.onValueChange = autoDub.idmode.fb.on("value", function(snapshot) {
+        autoDub.idmode.fb = new Firebase("https://discocheques.firebaseio.com");
+        autoDub.idmode.theBank = autoDub.idmode.fb.child("bank/"+autoDub.idmode.userid);
+        autoDub.idmode.theRoomShit = autoDub.idmode.fb.child("roomshit");
+        autoDub.idmode.onValueChange = autoDub.idmode.theBank.on("value", function(snapshot) {
             autoDub.idmode.balchange(snapshot);
         });
+        autoDub.idmode.onDiscoballChange = autoDub.idmode.theRoomShit.on("value", function(snapshot) {
+            autoDub.idmode.roomShitChange(snapshot);
+        });
+    },
+    roomShitChange: function(snapshot){
+        var data = snapshot.val();
+        if (data.discoball){
+            autoDub.idmode.discoball.down();
+        } else {
+            autoDub.idmode.discoball.up();
+        }
     },
     balchange: function(snapshot){
         var data = snapshot.val();
@@ -162,7 +189,7 @@ autoDub.ui = {
         if (window.location.href.match(/\/join\/indie-discotheque/)) {
             $(".right_section").css( "margin-top", "10px" );
             $(".right_section").prepend("<div id=\"discobal\" style=\"position: absolute; margin-top: -20px; font-size: 14px;\">Loading your Discocheque balance...</div>");
-            
+            autoDub.idmode.discoball.create();
             setTimeout(function() {
                 autoDub.idmode.init();
             }, 1000);
