@@ -35,6 +35,12 @@ autoDub.newSong = function (data) {
     console.log(data);
     if (data.song.songid == autoDub.lastSong && autoDub.mode == "timer") return;
     autoDub.lastSong = data.song.songid;
+    var songName = data.songInfo.name;
+    if (songName.match(/arnold/i) && songName.match(/luke/i) && songName.match(/million/i)){
+        autoDub.idmode.arnold = true;
+    } else {
+        autoDub.idmode.arnold = false;
+    }
     var duration = data.songInfo.songLength;
     var length = Math.floor(duration);
     var whatever = (Math.random() * 4) + 1;
@@ -66,6 +72,11 @@ autoDub.newSong = function (data) {
     }
 };
 
+autoDub.newChat = function(data){
+    var id = data.chatid;
+    if (autoDub.idmode.userid && autoDub.idmode.arnold) $("#"+id).find(".cursor-pointer").attr("src", "http://i.imgur.com/a6vmtKH.jpg");
+};
+
 autoDub.init = function () {
     autoDub.started = true;
     var script = document.createElement('script');
@@ -76,6 +87,7 @@ autoDub.init = function () {
     autoDub.storage.restore();
     Dubtrack.Events.bind("realtime:room_playlist-update", autoDub.newSong);
     Dubtrack.Events.bind("realtime:room_playlist-dub", autoDub.newVote);
+    Dubtrack.Events.bind("realtime:chat-message", autoDub.newChat);
     $(".dubup").click();
     console.log("autodub v" + autoDub.version + " is a go!");
 };
@@ -93,6 +105,7 @@ autoDub.idmode = {
         }
     },
     fb: null,
+    arnold: false,
     onValueChange: null,
     onDiscoballChange: null,
     theBank: null,
