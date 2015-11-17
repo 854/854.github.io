@@ -1,8 +1,8 @@
 var autoDub = {
     started: false,
     mode: "classic",
-    version: "00.07",
-    whatsNew: "Fixed a bug that broke Classic mode after the dubtrack.fm redesign.",
+    version: "00.08",
+    whatsNew: "",
     firstMessage:"AutoDub has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
     lastLoaded: null,
     roomCheck: null,
@@ -21,12 +21,16 @@ autoDub.versionMessage = function () {
         autoDub.storage.save();
         newStuff += autoDub.firstMessage;
         var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">" + newStuff + "</li>";
-    } else {
+    } else if (autoDub.whatsNew !== ""){
         var newStuff = "<span style=\"font-weight:700; color:cyan;\">[AutoDub] New in v" + autoDub.version + "</span><br/>";
         autoDub.lastLoaded = autoDub.version;
         autoDub.storage.save();
         newStuff += autoDub.whatsNew;
         var msg = "<li style=\"color:#eee; font-weight:400;text-transform:none; font-size:14px;\" class=\"system\">" + newStuff + "</li>";
+    } else {
+        autoDub.lastLoaded = autoDub.version;
+        autoDub.storage.save();
+        var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v" + autoDub.version + " is running in " + autoDub.mode + " mode.</li>";
     }
     $(".chat-main").append(msg);
 };
@@ -74,7 +78,7 @@ autoDub.newSong = function (data) {
 
 autoDub.newChat = function(data){
     var id = data.chatid;
-    if (autoDub.idmode.userid && autoDub.idmode.arnold) $("#"+id).find(".cursor-pointer").attr("src", "http://i.imgur.com/a6vmtKH.jpg");
+    if (autoDub.idmode.userid && autoDub.idmode.arnold) $("#"+id).find(".cursor-pointer").attr("src", "http://i.imgur.com/1AME7v3.png");
 };
 
 autoDub.init = function () {
