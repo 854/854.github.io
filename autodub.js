@@ -211,7 +211,7 @@ autoDub.ui = {
                 autoDub.idmode.init();
             }, 1000);
         }
-   
+        $("#chat-txt-message").attr('maxlength',140);
     },
     update: function () {
         var themode = autoDub.mode;
