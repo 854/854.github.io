@@ -1,7 +1,7 @@
 var autoDub = {
   started: false,
   mode: "classic",
-  version: "00.08",
+  version: "00.08d",
   whatsNew: "",
   firstMessage: "AutoDub has TWO modes. Classic mode and Timer mode. Classic mode upvotes right away when each song starts. Timer mode upvotes at a random time during the song. Toggle between the two modes in the dubtrack.fm left menu (the menu with the link to the lobby and stuff).",
   lastLoaded: null,
@@ -32,6 +32,8 @@ autoDub.versionMessage = function() {
     autoDub.storage.save();
     var msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">[AutoDub] v" + autoDub.version + " is running in " + autoDub.mode + " mode.</li>";
   }
+  msg = "<li style=\"font-weight:700; color:cyan; text-transform:none; font-size:14px;\" class=\"system\">This version of AutoDub is out of date. Get the most recent bookmarklet <a href=\"http://howtojointheindiediscothequewaitlist.com/autodub\">here</a>.</li>";
+
   $(".chat-main").append(msg);
 };
 
