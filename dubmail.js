@@ -1,6 +1,6 @@
 var dubMail = {
 	started: false,
-	version: "0.00000000000000000001"
+	version: "0.00000000000000000002"
 };
 
 dubMail.go = function(){
@@ -41,7 +41,7 @@ dubMail.newSong = function(data){
 dubMail.newChat = function(data){
 	var name = data.user.username;
 	var msg = data.message;
-	$('#sneakyInbox').prepend('<div class="sneakyMail"><div class="sneakyName">'+name+'</div><div class="sneakySubject">'+msg+'</div></div>');
+	$('#sneakyInbox').prepend('<div class="sneakyMail"><div class="sneakyName">'+name+'@dubtrack.fm</div><div class="sneakySubject">'+msg+'</div></div>');
 };
 
 dubMail.speak = function(txt){
