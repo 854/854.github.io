@@ -1,6 +1,6 @@
 var dubMail = {
 	started: false,
-	version: "0.00000000000000000003"
+	version: "0.00000000000000000004"
 };
 
 dubMail.go = function(){
@@ -94,7 +94,7 @@ dubMail.userLeave = function(data){
   	var name = data.user.username;
 
 	if ($("#yoits"+id).length){
-		$('yoits'+id).remove();
+		$('#yoits'+id).remove();
 	}
 };
 
