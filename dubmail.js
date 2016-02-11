@@ -1,6 +1,6 @@
 var dubMail = {
 	started: false,
-	version: "0.00000000000000000006"
+	version: "0.00000000000000000007"
 };
 
 dubMail.go = function(){
@@ -20,6 +20,7 @@ dubMail.go = function(){
   		$("#sneakySearch").val("");
   	}
   }
+  console.log("OK THIS IS DUBMAIL VERSION "+dubMail.version);
 }); 
 
         $.ajax({
@@ -50,7 +51,7 @@ dubMail.go = function(){
 				 for (var i = 0; i<formatted.data.length; i++){
 				 	var id = formatted.data[i]._user._id;
 				 	var name = formatted.data[i]._user.username;
-				 	$('#peopleHere').append('<li id="yoits'+id+'">'+name+'</li>');
+				 	$('#peopleHere').prepend('<li id="yoits'+id+'">'+name+'</li>');
  				}
             }
      });
@@ -63,7 +64,7 @@ dubMail.userJoin = function(data){
   var name = data.user.username;
   console.log(data);
 	if (!$("#yoits"+id).length){
-		$('#peopleHere').append('<li id="yoits'+id+'">'+name+'</li>');
+		$('#peopleHere').prepend('<li id="yoits'+id+'">'+name+'</li>');
 	}
 };
 
