@@ -1,6 +1,6 @@
 var dubMail = {
 	started: false,
-	version: "0.00000000000000000007"
+	version: "0.00000000000000000008"
 };
 
 dubMail.go = function(){
@@ -129,7 +129,7 @@ dubMail.kill = function(){
 dubMail.newChat = function(data){
 	var name = data.user.username;
 	var msg = data.message;
-	$('#sneakyInbox').prepend('<div class="sneakyMail"><div class="sneakyName">'+name+'@dubtrack.fm</div><div class="sneakySubject">'+msg+'</div><div class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
+	$('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName">'+name+'@dubtrack.fm</div><div title="'+msg+'" class="sneakySubject">'+msg+'</div><div class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
 };
 
 dubMail.speak = function(txt){
