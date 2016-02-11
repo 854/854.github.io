@@ -1,6 +1,6 @@
 var dubMail = {
 	started: false,
-	version: "0.000000000000000000011"
+	version: "0.000000000000000000012"
 };
 
 dubMail.go = function(){
@@ -9,6 +9,7 @@ dubMail.go = function(){
 
     Dubtrack.Events.bind("realtime:chat-message", dubMail.newChat);
     Dubtrack.Events.bind("realtime:room_playlist-update", dubMail.newSong);
+    Dubtrack.Events.bind("realtime:chat-skip", dubMail.songSkip);
     Dubtrack.Events.bind("realtime:user-leave", dubMail.userLeave);
   Dubtrack.Events.bind("realtime:user-join", dubMail.userJoin);
     $('#sneakySearch').keypress(function (e) {
@@ -142,6 +143,7 @@ dubMail.kill = function(){
 	$("#dubmail1").remove();
 	Dubtrack.Events.unbind("realtime:chat-message", dubMail.newChat);
     Dubtrack.Events.unbind("realtime:room_playlist-update", dubMail.newSong);
+    Dubtrack.Events.unbind("realtime:chat-skip", dubMail.songSkip);
     Dubtrack.Events.unbind("realtime:user-leave", dubMail.userLeave);
   	Dubtrack.Events.unbind("realtime:user-join", dubMail.userJoin);
 	$("#sneakySearch").unbind("keypress");
@@ -152,6 +154,11 @@ dubMail.newChat = function(data){
 	var name = data.user.username;
 	var msg = data.message;
 	$('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName">'+name+'@dubtrack.fm</div><div title="'+msg+'" class="sneakySubject">'+msg+'</div><div class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
+};
+
+dubMail.songSkip = function(data){
+  var name = data.username;
+  $('#sneakyInbox').prepend('<div class="sneakyMail" style="font-weight:700;"><div class="sneakyName">noreply@dubtrack.fm</div><div class="sneakySubject">'+name+' skipped the song.</div><div class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
 };
 
 dubMail.speak = function(txt){
