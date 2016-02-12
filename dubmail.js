@@ -1,10 +1,11 @@
 var dubMail = {
 	started: false,
-	version: "0.000000000000000000013"
+	version: "0.000000000000000000014",
+  queue: false
 };
 
 dubMail.go = function(){
-	$('html').append('<style id="sneakyStyles">body{display:none;}#Scontainer{font-family:helvetica, arial, san-serif;font-size:12px;background-color:#000; background-color:#fff; max-width:900px; margin-left:auto; margin-right:auto; min-height:100%;}#sneakyTop{line-height:45px;background-color:#888;}#sneakySide{float:left;padding-top:10px;width:175px;background-color:#ddd;height:900px;} #Scontainer button{font-family:helvetica,arial,sans-serif; color:#000;} #folderz li{margin-bottom:5px;} #Scontainer input{color:#000; background-color:#fff;} #peopleHere{height:280px; background-color:#fff; overflow-y:scroll;} #sneakyMain{float:right;width:725px;height:900px;overflow-y:scroll;}.sneakyMail{border-bottom:1px solid #eee; padding:5px;cursor:pointer;} #peopleHere li:nth-child(even) { background-color:#eee; } .sneakyName, .sneakySubject, .sneakyTime {display:inline-block;overflow-x:hidden; white-space: nowrap;} .sneakyTime{width:50px; float:right; text-align:right;} .sneakyName{width:140px; margin-right:10px;}.sneakySubject{width:470px;}#sneakySearch{line-height:30px; padding:0; padding-left:10px; font-family:helvetica,arial,sans-serif; font-size:14px; width:500px;margin-left:50px;}#Scontainer a{padding-top:2px; background: transparent url(https://i.imgur.com/6XNmnlp.png) no-repeat; color: #00f; padding-left: 19px; line-height: 15px;} #peopleHere li{cursor: pointer; padding:4px;} #Scompose{padding:10px;}#Scompose button{width:90%;}.sneakyLogo{font-size:18px;font-weight:700;padding-left:10px;}</style><div id="Scontainer"><div id="sneakyTop"> <span class="sneakyLogo">Real Email Client</span> <input id="sneakySearch" type="text"> <button onclick="dubMail.hide()">Search</button></div><div id="sneakySide"><div id="Scompose"><button onclick="dubMail.kill()">Send Mail</button><br/><br/><strong>Folders</strong><ul id="folderz"><li><a style="background-position: 0px -18px" href="#">Inbox</a></li><li><a style="background-position: 0px -73px" href="#">Spam (13)</a></li><li><a style="background-position: 0px -91px" href="#">Deleted</a></li><li><a id="sneakyArtist" href="#">Artist</a></li><li><a id="sneakyTrack" href="#">Track</a></li><li><a href="#">Favorites</a></li></ul><br/><br/><strong>Contacts</strong><ul id="peopleHere"></ul></div></div><div id="sneakyMain"><div class="sneakyMail" style="background-color:#ddd; font-weight:700;"><div class="sneakyName">FROM</div><div class="sneakySubject">SUBJECT</div></div><div id="sneakyInbox"></div></div><div style="clear:both"></div></div>');
+	$('html').append('<style id="sneakyStyles">body{display:none;}#Scontainer{font-family:helvetica, arial, san-serif;font-size:12px;background-color:#000; background-color:#fff; max-width:900px; margin-left:auto; margin-right:auto; min-height:100%;}#sneakyTop{line-height:45px;background-color:#888;}#sneakySide{float:left;padding-top:10px;width:175px;background-color:#ddd;height:900px;} #Scontainer button{font-family:helvetica,arial,sans-serif; color:#000;} #folderz li{margin-bottom:5px;} #Scontainer input{color:#000; background-color:#fff;} #peopleHere{height:280px; background-color:#fff; overflow-y:scroll;} #sneakyMain{float:right;width:725px;height:900px;overflow-y:scroll;} #sneakyQueue{display:none;} .sneakyMail{border-bottom:1px solid #eee; padding:5px;cursor:pointer;} #peopleHere li:nth-child(even) { background-color:#eee; } .sneakyName, .sneakySubject, .sneakyTime {display:inline-block;overflow-x:hidden; white-space: nowrap;} .sneakyTime{width:50px; float:right; text-align:right;} .sneakyName{width:140px; margin-right:10px;}.sneakySubject{width:470px;}#sneakySearch{line-height:30px; padding:0; padding-left:10px; font-family:helvetica,arial,sans-serif; font-size:14px; width:500px;margin-left:50px;}#Scontainer a{padding-top:2px; background: transparent url(https://i.imgur.com/6XNmnlp.png) no-repeat; color: #00f; padding-left: 19px; line-height: 15px;} #peopleHere li{cursor: pointer; padding:4px;} #Scompose{padding:10px;}#Scompose button{width:90%;}.sneakyLogo{font-size:18px;font-weight:700;padding-left:10px;}</style><div id="Scontainer"><div id="sneakyTop"> <span class="sneakyLogo">Real Email Client</span> <input id="sneakySearch" type="text"> <button onclick="dubMail.hide()">Search</button></div><div id="sneakySide"><div id="Scompose"><button onclick="dubMail.kill()">Send Mail</button><br/><br/><strong>Folders</strong><ul id="folderz"><li><a style="background-position: 0px -18px" href="#">Inbox</a></li><li><a style="background-position: 0px -73px" href="#">Spam (13)</a></li><li><a style="background-position: 0px -91px" href="#">Deleted</a></li><li><a id="sneakyArtist" href="#">Artist</a></li><li><a id="sneakyTrack" href="#">Track</a></li><li><a onclick="dubMail.toggleQueue()" href="#">Favorites</a></li></ul><br/><br/><strong>Contacts</strong><ul id="peopleHere"></ul></div></div><div id="sneakyMain"><div class="sneakyMail" style="background-color:#ddd; font-weight:700;"><div class="sneakyName">FROM</div><div class="sneakySubject">SUBJECT</div></div><div id="sneakyInbox"></div><div id="sneakyQueue"></div></div><div style="clear:both"></div></div>');
      $(".player_header").append("<span onclick=\"dubMail.unhide()\">EMAIL</span>");
 
     Dubtrack.Events.bind("realtime:chat-message", dubMail.newChat);
@@ -60,7 +61,7 @@ dubMail.go = function(){
      });
         dubMail.started = true;
   console.log("OK THIS IS DUBMAIL VERSION "+dubMail.version);
-};
+};;
 
 dubMail.userJoin = function(data){
 	var id = data.user._id;
@@ -80,6 +81,53 @@ dubMail.hide = function(){
 dubMail.unhide = function(){
   $("body").hide();
   $("#Scontainer").show();
+};
+
+dubMail.toggleQueue = function(){
+  if (dubMail.queue){
+    $("#sneakyInbox").show();
+    $("#sneakyQueue").hide();
+    $("#sneakyQueue").html("");
+    dubMail.queue = false;
+  } else {
+    $("#sneakyQueue").html("");
+         $.ajax({
+       dataType: "json",
+       type : "GET",
+       url: "https://api.dubtrack.fm/user/session/room/55f82ef944809b0300f88695/queue", 
+            success:  function (formatted){
+         for (var i = 0; i<formatted.data.length; i++){
+          var songName = formatted.data[i]._song.name;
+         var foo = songName.split(" - ");
+ var artist = foo[0];
+ var title = foo[1];
+ if (!title){
+  title = artist;
+  artist = "Unknown";
+ }
+ var id = formatted.data[i]._id;
+  $('#sneakyQueue').append('<div id="sneak'+id+'" class="sneakyMail"><div title="'+artist+'" class="sneakyName">'+artist+'</div><div title="'+title+'" class="sneakySubject">'+title+'</div><div class="sneakyTime"><span onclick="dubMail.deleteTrack(\''+id+'\')" class="sneakyDelete">Delete</span></div></div>');
+        }
+            $("#sneakyInbox").hide();
+    $("#sneakyQueue").show();
+    dubMail.queue = true;
+            }
+     });
+
+  }
+};
+
+dubMail.deleteTrack = function(id){
+ $.ajax({
+       dataType: "json",
+       type : "DELETE",
+       url: "https://api.dubtrack.fm/room/55f82ef944809b0300f88695/playlist/"+id,
+       success: function(data){
+        console.log(data);
+        $("#sneak"+id).remove();
+       }
+     });
+
 };
 
 dubMail.sneakyMention = function(name){
