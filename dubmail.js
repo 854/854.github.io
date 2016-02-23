@@ -1,7 +1,9 @@
 var dubMail = {
 	started: false,
-	version: "0.000000000000000000020",
+	version: "0.000000000000000000021",
   queue: false,
+  fromLast: "YM",
+  lastChat: null,
   queueActual: []
 };
 
@@ -281,7 +283,20 @@ dubMail.kill = function(){
 dubMail.newChat = function(data){
 	var name = data.user.username;
 	var msg = data.message;
-	$('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName"><span style="font-weight:700;">'+name+'</span>@dubtrack.fm</div><div title="'+msg+'" class="sneakySubject">'+msg+'</div><div class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
+  var id = data.user._id;
+  var chid = data.chatid;
+
+  if (dubMail.fromLast == id){
+    var oldtext = $("#h0tmail"+dubMail.lastChat).text();
+    $("#h0tmail"+dubMail.lastChat).text(oldtext+" "+msg);
+    $("#h0tmail"+dubMail.lastChat).attr("title", oldtext+" "+msg);
+
+    $("#h0ttime"+dubMail.lastChat).text(dubMail.format_time(Date.now()));
+  } else {
+    dubMail.lastChat = chid;
+	 $('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName"><span style="font-weight:700;">'+name+'</span>@dubtrack.fm</div><div title="'+msg+'" id="h0tmail'+chid+'" class="sneakySubject">'+msg+'</div><div id="h0ttime'+chid+'" class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
+  }
+  dubMail.fromLast = id;
 };
 
 dubMail.songSkip = function(data){
