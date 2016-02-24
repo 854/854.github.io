@@ -521,7 +521,7 @@ dubMail.newChat = function(data){
     $("#h0ttime"+dubMail.lastChat).text(dubMail.format_time(Date.now()));
   } else {
     dubMail.lastChat = chid;
-   $('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName"><span style="font-weight:700;">'+name+'</span>@dubtrack.fm</div><div title="'+msg+'" id="h0tmail'+chid+'" class="sneakySubject">'+msg+'</div><div id="h0ttime'+chid+'" class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
+   $('#sneakyInbox').prepend('<div class="sneakyMail"><div title="'+name+'" class="sneakyName"><span style="font-weight:700;">'+name+'</span>@dubtrack.fm</div><div title="'+Dubtrack.helpers.text.convertHtmltoTags(msg)+'" id="h0tmail'+chid+'" class="sneakySubject">'+msg+'</div><div id="h0ttime'+chid+'" class="sneakyTime">'+dubMail.format_time(Date.now())+'</div></div>');
   }
   dubMail.fromLast = id;
 };
