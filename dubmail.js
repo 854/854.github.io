@@ -455,8 +455,16 @@ var message_id1 = textValue.substring(9, textValue.length);
 
 
 } else {
-  //pm box already exists
-        $("#sneakTexty"+message_id).append("<div class=\"sneakyMsg\"><strong>"+user+":</strong> "+msg+"</div>");
+  var newChat = "";
+  for (var i=data.data.length - 1; i>=0 ; i--){
+    var nice = data.data[i];
+   
+     var msg1 = data.data[i].message;
+      var user1 = data.data[i]._user.username;
+      newChat += "<div class=\"sneakyMsg\"><strong>"+user1+":</strong> "+msg1+"</div>";
+
+  }
+  $("#sneakTexty"+message_id).html(newChat);
   $("#sneakTexty"+message_id).scrollTop( $("#sneakTexty"+message_id)[0].scrollHeight);
 
 
