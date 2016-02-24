@@ -346,17 +346,20 @@ var message_id1 = textValue.substring(9, textValue.length);
     
   } }
 });
+
+
   for (var i=0; i< data.data.length; i++){
     var nice = data.data[i];
    
-     var msg1 = data.data[i].message;
+     var msg0 = data.data[i].message;
+     var msg1 = Dubtrack.helpers.text.convertHtmltoTags(msg0);
       var user1 = data.data[i]._user.username;
-      $("#sneakTexty"+message_id).prepend("<div class=\"sneakyMsg\"><strong>"+user1+":</strong> "+msg1+"</div>");
+      $('#sneakTexty'+message_id).prepend('<div class="sneakyMsg"><strong>'+user1+':</strong> '+msg1+'</div>');
 
   }
+  emojify.run(document.getElementById('sneakTexty'+message_id));
+
   $("#sneakTexty"+message_id).scrollTop( $("#sneakTexty"+message_id)[0].scrollHeight);
-
-
 } 
 
                                      
@@ -452,8 +455,9 @@ var message_id1 = textValue.substring(9, textValue.length);
       $('#sneakTexty'+message_id).prepend('<div class="sneakyMsg"><strong>'+user1+':</strong> '+msg1+'</div>');
 
   }
+  emojify.run(document.getElementById('sneakTexty'+message_id));
+
   $("#sneakTexty"+message_id).scrollTop( $("#sneakTexty"+message_id)[0].scrollHeight);
-emojify.run(document.getElementById('sneakTexty'+message_id));
 
 
 } else {
@@ -463,12 +467,13 @@ emojify.run(document.getElementById('sneakTexty'+message_id));
      var msg0 = data.data[i].message;
      var msg1 = Dubtrack.helpers.text.convertHtmltoTags(msg0);
       var user1 = data.data[i]._user.username;
-      $('#sneakTexty'+message_id).prepend('<div class="sneakyMsg"><strong>'+user1+':</strong> '+msg1+'</div>');
+      newChat += '<div class="sneakyMsg"><strong>'+user1+':</strong> '+msg1+'</div>';
 
   }
   $("#sneakTexty"+message_id).html(newChat);
+  emojify.run(document.getElementById('sneakTexty'+message_id));
+
   $("#sneakTexty"+message_id).scrollTop( $("#sneakTexty"+message_id)[0].scrollHeight);
-emojify.run(document.getElementById('sneakTexty'+message_id));
 
 
 }
@@ -503,15 +508,14 @@ Dubtrack.Events.unbind("realtime:new-message", dubMail.newPM);
 
 dubMail.newChat = function(data){
   var name = data.user.username;
-  var msg0 = data.message;
-  var msg = Dubtrack.helpers.text.convertHtmltoTags(msg0);
+  var msg = data.message;
 
   var id = data.user._id;
   var chid = data.chatid;
 
   if (dubMail.fromLast == id){
     var oldtext = $("#h0tmail"+dubMail.lastChat).text();
-    $("#h0tmail"+dubMail.lastChat).text(oldtext+" "+msg);
+    $("#h0tmail"+dubMail.lastChat).html(Dubtrack.helpers.text.convertHtmltoTags(oldtext)+" "+Dubtrack.helpers.text.convertHtmltoTags(msg));
     $("#h0tmail"+dubMail.lastChat).attr("title", oldtext+" "+msg);
 
     $("#h0ttime"+dubMail.lastChat).text(dubMail.format_time(Date.now()));
