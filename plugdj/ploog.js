@@ -20,6 +20,7 @@ ploog.yeho = function() {
     console.log("-------------------------\nlaunching Indie Discotheque Queue\n-------------------------");
     ploog.usrname = API.getUser().username;
     ploog.fbLoaded = true;
+    API.on(API.CHAT_COMMAND, ploog.command);
     ploog.queueInfo = new Firebase("https://discotheque-list.firebaseio.com/queue");
     ploog.onValueChange = ploog.queueInfo.on("value", function(snapshot) {
         ploog.queueUpdate(snapshot);
@@ -27,12 +28,23 @@ ploog.yeho = function() {
     ploog.ui.build();
 };
 
+ploog.command = function(cmd){
+    if (cmd == "/idlist"){
+        ploog.ui.hide();
+    }
+};
+
 ploog.queueUpdate = function(snapshot) {
     var data = snapshot.val();
     var queue = data.queue;
     var stage = data.stage;
+    var theme = data.theme;
+    var themeString = "";
     var queueString = "<br/><strong>Queue</strong><br/>";
     var stageString = "<strong>DJs</strong><br/>";
+    if (theme){
+        themeString += "<strong>Theme</strong><br/>"+theme+"<br/><br/>";
+    }
     if (queue == "") {
         queueString += "The list is empty!<br/>";
     } else {
@@ -77,14 +89,14 @@ ploog.queueUpdate = function(snapshot) {
         stageString += "Nobody is DJing!";
     }
 
-    $("#ploog_screen").html(stageString + "" + queueString);
+    $("#ploog_screen").html(themeString + "" + stageString + "" + queueString);
 
 };
 
 ploog.ui = {
     build: function() {
-        $("body").prepend("<style id='ploog_styles'>.ploog_emptyspot{color:#666;}.ploog_currentdj{color:#ffdd6f;}#ploog_screen{padding-top:10px;padding-left:4px;height:210px; overflow-y:scroll;} #ploog_ui{z-index:40; font-family:helvetica,arial,sans-serif; left:12px; font-size:12px;height:250px; position:absolute; color:#000; top:70px; width:170px; background-color:#282C35; color:#d1d1d1;} #ploog_headr{line-height:22px;background-color:#1C1F25;font-weight:700;color:#d1d1d1;padding-left:4px;}</style><div id='ploog_ui'></div>");
-        $("#ploog_ui").append("<div id='ploog_headr'>#NARF</div>");
+        $("body").prepend("<style id='ploog_styles'>.plooglink{font-weight:400;cursor:pointer;color:#fff;text-decoration:underline;}.ploog_emptyspot{color:#666;}.ploog_currentdj{color:#ffdd6f;}#ploog_screen{padding-top:10px;padding-left:4px;height:210px; overflow-y:scroll;} #ploog_ui{z-index:40; font-family:helvetica,arial,sans-serif; left:12px; font-size:12px;height:250px; position:absolute; color:#000; top:70px; width:170px; background-color:#282C35; color:#d1d1d1;} #ploog_headr{line-height:22px;background-color:#1C1F25;font-weight:700;color:#d1d1d1;padding-left:4px;padding-right:4px;}.ploogleft{float:left;}.ploogright{float:right;}.ploogclear{clear:both}</style><div id='ploog_ui'></div>");
+        $("#ploog_ui").append("<div id='ploog_headr'><div class='ploogleft'>#NARF</div><div class='ploogright'><a class='plooglink' onclick='ploog.ui.hide()'>[hide]</a></div><div class='ploogclear'></div></div>");
         $("#ploog_ui").append("<div id='ploog_screen'>Loading...</div>");
         $("#ploog_ui").drags({
             handle: "#ploog_headr"
@@ -93,7 +105,22 @@ ploog.ui = {
     destroy: function() {
         $("#ploog_styles").remove();
         $("#ploog_ui").remove();
-    }
+    },
+    hide: function(){
+        if (!ploog.ui.hidden){
+            ploog.ui.hidden = true;
+            $("#ploog_ui").css('display', 'none');
+            ploog.queueInfo.off("value", ploog.onValueChange);
+            API.chatLog("ID List is hidden. Type /idlist to bring it back.");
+        } else {
+            ploog.ui.hidden = false;
+            $("#ploog_ui").css('display', 'block');
+            ploog.onValueChange = ploog.queueInfo.on("value", function(snapshot) {
+                ploog.queueUpdate(snapshot);
+            });
+        }
+    },
+    hidden: false
 }
 
 ploog.cleanUp = function() {
